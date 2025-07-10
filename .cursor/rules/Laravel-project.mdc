@@ -1,0 +1,602 @@
+---
+alwaysApply: true
+---
+
+# Cursor Rules - Laravel 12 Inventory Management System
+
+## Project Overview
+Inventory Management System built with Laravel 12, Inertia.js, React, and TypeScript following modern full-stack development practices.
+
+## Tech Stack
+- **Backend**: Laravel 12 (PHP 8.2+), MySQL, Eloquent ORM
+- **Frontend**: React with TypeScript, Inertia.js
+- **Authentication**: Laravel Breeze + Sanctum
+- **Styling**: TailwindCSS + shadcn/ui
+- **Permissions**: spatie/laravel-permission
+- **Query Builder**: spatie/laravel-query-builder
+
+## Core Principles
+- **Reliability First**: If you can't make it reliable, don't build it
+- **Simplicity**: Implement features in the simplest possible way
+- **DRY, KISS, YAGNI**: Don't Repeat Yourself, Keep It Simple, You Ain't Gonna Need It
+- **Clean Code**: Write readable, maintainable code
+- **File Size**: Keep files focused and under 200 lines
+- **Test-Driven**: Test after every meaningful change
+
+## Laravel 12 Specific Rules
+
+### Project Structure
+```
+app/
+├── Http/
+│   ├── Controllers/           # Inertia controllers
+│   ├── Controllers/Api/       # API controllers
+│   ├── Requests/             # Form validation
+│   └── Middleware/           # Custom middleware
+├── Models/                   # Eloquent models
+database/
+├── migrations/
+├── seeders/
+└── factories/
+resources/js/
+├── Pages/                    # Inertia pages
+├── Components/               # Shared components
+├── Layouts/                  # Layout components
+└── types/                    # TypeScript types
+routes/
+├── web.php                   # SPA routes
+├── api.php                   # API routes
+└── console.php               # Scheduled commands
+```
+
+### Laravel 12 Modern Features
+- **Service Providers**: Only use AppServiceProvider, register new ones in `bootstrap/providers.php`
+- **Event Listeners**: Auto-discovery with proper type hints
+- **Console Scheduler**: Use `routes/console.php` (no Kernel.php)
+- **Middleware**: Register in `bootstrap/app.php`
+- **Policies**: Auto-discovered, no manual registration needed
+- **Factories**: Use `fake()` helper instead of `$this->faker`
+
+### PHP Best Practices
+- Use `declare(strict_types=1)` in all PHP files
+- Follow PSR-12 code standards
+- Use PHP 8.2+ features (enums, readonly, match, etc.)
+- Never use default parameter values - make all parameters explicit
+- Implement proper error handling with try-catch blocks
+- Use Laravel's built-in validation and exception handling
+
+### Authentication & Security
+- **SPA Authentication**: Laravel Breeze with Inertia + React
+- **API Authentication**: Sanctum for token-based access
+- **Route Protection**: 
+  - SPA routes: `auth` middleware
+  - API routes: `auth:sanctum` middleware
+- **CSRF Protection**: Enabled via Sanctum
+
+## TypeScript & React Rules
+
+### TypeScript Standards
+- Use TypeScript for all code
+- Prefer interfaces over types
+- Avoid `any` or `unknown` types
+- No type assertions with `as` or `!`
+- Avoid enums - use objects or maps
+- Organize types in dedicated `types/` directory
+
+### React Best Practices
+- Use functional components only (no classes)
+- Prefer declarative programming patterns
+- Use descriptive variable names with auxiliary verbs (`isLoaded`, `hasError`)
+- Keep JSX minimal and readable
+- Use the "function" keyword for pure functions
+- Avoid unnecessary curly braces in conditionals
+
+### Inertia.js Integration
+- Use `usePage().props` for backend data access
+- Use `useForm()` for form management
+- Prefer Inertia shared props over global state
+- Use Zustand only when global state is absolutely necessary
+- No React Router - rely on Laravel routing and Inertia navigation
+
+### Component Structure
+```typescript
+// Preferred component structure
+interface ComponentProps {
+  // Props definition
+}
+
+function ComponentName({ prop1, prop2 }: ComponentProps) {
+  // Component logic
+  return (
+    // JSX
+  );
+}
+
+export default ComponentName;
+```
+
+## Styling & UI Guidelines
+
+### TailwindCSS
+- Use utility-first approach
+- Mobile-first responsive design
+- Consistent color scheme and typography
+- Extend configuration via `tailwind.config.ts`
+
+### Component Library
+- Use shadcn/ui for all UI components
+- Components location: `components/ui/`
+- Use Lucide React for icons
+- Ensure accessibility compliance
+
+### CSS Organization
+- No custom CSS files - use Tailwind utilities
+- Use CSS Grid and Flexbox for layouts
+- Implement smooth animations and transitions
+- Maintain design consistency across components
+
+## Database & Models
+
+### Eloquent Best Practices
+- Use Eloquent ORM with proper relationships
+- Implement repository/service layers when appropriate
+- Use Laravel's query builder for complex queries
+- Leverage spatie/laravel-query-builder for filtering and sorting
+
+### Migrations & Seeders
+- Use descriptive migration names
+- Include proper foreign key constraints
+- Use factories for test data generation
+- Implement proper database indexing
+
+## Error Handling & Debugging
+
+### Error Management
+- Use specific exception types
+- Implement proper logging with context
+- Create custom exceptions when necessary
+- Use Laravel's built-in error handling tools
+
+### Debugging Process
+1. Consider multiple possible causes
+2. Explain problems in plain English
+3. Make minimal necessary changes
+4. Always verify fixes
+5. For strange errors, suggest Perplexity web search for latest information
+
+## Development Workflow
+
+### Code Changes
+- Understand existing codebase before changes
+- Respect existing code style and patterns
+- Suggest only minimal changes related to current dialog
+- Change as few lines as possible while solving the problem
+- Focus only on what user is asking for
+
+### Building Process
+1. Understand requirements completely
+2. Plan next steps in detail
+3. Create instructions.mdc (if not created yet , if it exists, update it) with:
+   - Workflow of development
+   - Features and phases of development
+   - Project Overview
+   - Core Functionalities
+   - Documentation complete and Libraries
+   - Current File Structure
+4. Write simple, precise prompts
+5. Test each functionality after implementation
+
+## API Development
+
+### API Standards
+- Version API routes appropriately
+- Use API Resources for consistent responses
+- Implement proper CORS handling
+- Group routes with appropriate middleware
+
+### Response Format
+```php
+// Consistent API response structure
+return response()->json([
+    'data' => $data,
+    'message' => 'Success message',
+    'status' => 'success'
+], 200);
+```
+
+## Testing Strategy
+
+### Testing Approach
+- Write unit tests for controllers and models
+- Use Laravel Dusk for end-to-end testing
+- Test critical user paths
+- Implement feature tests for API endpoints
+
+### Test Organization
+- Keep tests focused and isolated
+- Use factories for test data
+- Mock external dependencies
+- Test edge cases and error conditions
+
+## Performance & Optimization
+
+### Backend Optimization
+- Use Eloquent relationships efficiently
+- Implement proper caching strategies
+- Optimize database queries
+- Use Laravel's built-in performance tools
+
+### Frontend Optimization
+- Lazy load components when appropriate
+- Optimize bundle size
+- Use React.memo for expensive computations
+- Implement proper loading states
+
+## Security Considerations
+
+### Security Best Practices
+- Validate all user inputs
+- Use HTTPS in production
+- Implement rate limiting
+- Sanitize data before database operations
+- Use Laravel's built-in security features
+
+### Data Protection
+- Implement proper access controls
+- Use role-based permissions (spatie/laravel-permission)
+- Encrypt sensitive data
+- Regular security audits
+
+## Documentation Standards
+
+### Code Documentation
+- Use clear, descriptive comments
+- Document complex business logic
+- Include type definitions
+- Maintain up-to-date README files
+
+### API Documentation
+- Document all API endpoints
+- Include request/response examples
+- Specify required permissions
+- Maintain changelog for API versions
+
+---
+
+## Quick Reference
+
+### Common Commands
+```bash
+# Laravel commands
+php artisan make:controller --resource
+php artisan make:model -mfr
+php artisan make:request
+
+# Frontend commands
+npm run dev
+npm run build
+npm run type-check
+```
+
+### File Naming Conventions
+- **Controllers**: PascalCase (`UserController.php`)
+- **Models**: PascalCase (`User.php`)
+- **Components**: PascalCase (`UserProfile.tsx`)
+- **Pages**: PascalCase (`UserDashboard.tsx`)
+- **Types**: PascalCase (`UserType.ts`)
+- **Utilities**: camelCase (`userHelpers.ts`)
+
+### Import Patterns
+```typescript
+// React imports
+import { useState, useEffect } from 'react';
+import { usePage, useForm } from '@inertiajs/react';
+
+// Component imports
+import { Button } from '@/components/ui/button';
+import { User } from 'lucide-react';
+
+// Type imports
+import type { User as UserType } from '@/types';
+```
+
+Remember: Focus on simplicity, reliability, and maintainability. When in doubt, choose the simpler solution that works reliably over the complex one that might be more "elegant".
+# Cursor Rules - Laravel 12 Inventory Management System
+
+## Project Overview
+Inventory Management System built with Laravel 12, Inertia.js, React, and TypeScript following modern full-stack development practices.
+
+## Tech Stack
+- **Backend**: Laravel 12 (PHP 8.2+), MySQL, Eloquent ORM
+- **Frontend**: React with TypeScript, Inertia.js
+- **Authentication**: Laravel Breeze + Sanctum
+- **Styling**: TailwindCSS + shadcn/ui
+- **Permissions**: spatie/laravel-permission
+- **Query Builder**: spatie/laravel-query-builder
+
+## Core Principles
+- **Reliability First**: If you can't make it reliable, don't build it
+- **Simplicity**: Implement features in the simplest possible way
+- **DRY, KISS, YAGNI**: Don't Repeat Yourself, Keep It Simple, You Ain't Gonna Need It
+- **Clean Code**: Write readable, maintainable code
+- **File Size**: Keep files focused and under 200 lines
+- **Test-Driven**: Test after every meaningful change
+
+## Laravel 12 Specific Rules
+
+### Project Structure
+```
+app/
+├── Http/
+│   ├── Controllers/           # Inertia controllers
+│   ├── Controllers/Api/       # API controllers
+│   ├── Requests/             # Form validation
+│   └── Middleware/           # Custom middleware
+├── Models/                   # Eloquent models
+database/
+├── migrations/
+├── seeders/
+└── factories/
+resources/js/
+├── Pages/                    # Inertia pages
+├── Components/               # Shared components
+├── Layouts/                  # Layout components
+└── types/                    # TypeScript types
+routes/
+├── web.php                   # SPA routes
+├── api.php                   # API routes
+└── console.php               # Scheduled commands
+```
+
+### Laravel 12 Modern Features
+- **Service Providers**: Only use AppServiceProvider, register new ones in `bootstrap/providers.php`
+- **Event Listeners**: Auto-discovery with proper type hints
+- **Console Scheduler**: Use `routes/console.php` (no Kernel.php)
+- **Middleware**: Register in `bootstrap/app.php`
+- **Policies**: Auto-discovered, no manual registration needed
+- **Factories**: Use `fake()` helper instead of `$this->faker`
+
+### PHP Best Practices
+- Use `declare(strict_types=1)` in all PHP files
+- Follow PSR-12 code standards
+- Use PHP 8.2+ features (enums, readonly, match, etc.)
+- Never use default parameter values - make all parameters explicit
+- Implement proper error handling with try-catch blocks
+- Use Laravel's built-in validation and exception handling
+
+### Authentication & Security
+- **SPA Authentication**: Laravel Breeze with Inertia + React
+- **API Authentication**: Sanctum for token-based access
+- **Route Protection**: 
+  - SPA routes: `auth` middleware
+  - API routes: `auth:sanctum` middleware
+- **CSRF Protection**: Enabled via Sanctum
+
+## TypeScript & React Rules
+
+### TypeScript Standards
+- Use TypeScript for all code
+- Prefer interfaces over types
+- Avoid `any` or `unknown` types
+- No type assertions with `as` or `!`
+- Avoid enums - use objects or maps
+- Organize types in dedicated `types/` directory
+
+### React Best Practices
+- Use functional components only (no classes)
+- Prefer declarative programming patterns
+- Use descriptive variable names with auxiliary verbs (`isLoaded`, `hasError`)
+- Keep JSX minimal and readable
+- Use the "function" keyword for pure functions
+- Avoid unnecessary curly braces in conditionals
+
+### Inertia.js Integration
+- Use `usePage().props` for backend data access
+- Use `useForm()` for form management
+- Prefer Inertia shared props over global state
+- Use Zustand only when global state is absolutely necessary
+- No React Router - rely on Laravel routing and Inertia navigation
+
+### Component Structure
+```typescript
+// Preferred component structure
+interface ComponentProps {
+  // Props definition
+}
+
+function ComponentName({ prop1, prop2 }: ComponentProps) {
+  // Component logic
+  return (
+    // JSX
+  );
+}
+
+export default ComponentName;
+```
+
+## Styling & UI Guidelines
+
+### TailwindCSS
+- Use utility-first approach
+- Mobile-first responsive design
+- Consistent color scheme and typography
+- Extend configuration via `tailwind.config.ts`
+
+### Component Library
+- Use shadcn/ui for all UI components
+- Components location: `components/ui/`
+- Use Lucide React for icons
+- Ensure accessibility compliance
+
+### CSS Organization
+- No custom CSS files - use Tailwind utilities
+- Use CSS Grid and Flexbox for layouts
+- Implement smooth animations and transitions
+- Maintain design consistency across components
+
+## Database & Models
+
+### Eloquent Best Practices
+- Use Eloquent ORM with proper relationships
+- Implement repository/service layers when appropriate
+- Use Laravel's query builder for complex queries
+- Leverage spatie/laravel-query-builder for filtering and sorting
+
+### Migrations & Seeders
+- Use descriptive migration names
+- Include proper foreign key constraints
+- Use factories for test data generation
+- Implement proper database indexing
+
+## Error Handling & Debugging
+
+### Error Management
+- Use specific exception types
+- Implement proper logging with context
+- Create custom exceptions when necessary
+- Use Laravel's built-in error handling tools
+
+### Debugging Process
+1. Consider multiple possible causes
+2. Explain problems in plain English
+3. Make minimal necessary changes
+4. Always verify fixes
+5. For strange errors, suggest Perplexity web search for latest information
+
+## Development Workflow
+
+### Code Changes
+- Understand existing codebase before changes
+- Respect existing code style and patterns
+- Suggest only minimal changes related to current dialog
+- Change as few lines as possible while solving the problem
+- Focus only on what user is asking for
+
+### Building Process
+1. Understand requirements completely
+2. Plan next steps in detail
+3. Create instructions.md with:
+   - Project Overview
+   - Core Functionalities
+   - Documentation and Libraries
+   - Current File Structure
+4. Write simple, precise prompts
+5. Test each functionality after implementation
+
+## API Development
+
+### API Standards
+- Version API routes appropriately
+- Use API Resources for consistent responses
+- Implement proper CORS handling
+- Group routes with appropriate middleware
+
+### Response Format
+```php
+// Consistent API response structure
+return response()->json([
+    'data' => $data,
+    'message' => 'Success message',
+    'status' => 'success'
+], 200);
+```
+
+## Testing Strategy
+
+### Testing Approach
+- Write unit tests for controllers and models
+- Use Laravel Dusk for end-to-end testing
+- Test critical user paths
+- Implement feature tests for API endpoints
+
+### Test Organization
+- Keep tests focused and isolated
+- Use factories for test data
+- Mock external dependencies
+- Test edge cases and error conditions
+
+## Performance & Optimization
+
+### Backend Optimization
+- Use Eloquent relationships efficiently
+- Implement proper caching strategies
+- Optimize database queries
+- Use Laravel's built-in performance tools
+
+### Frontend Optimization
+- Lazy load components when appropriate
+- Optimize bundle size
+- Use React.memo for expensive computations
+- Implement proper loading states
+
+## Security Considerations
+
+### Security Best Practices
+- Validate all user inputs
+- Use HTTPS in production
+- Implement rate limiting
+- Sanitize data before database operations
+- Use Laravel's built-in security features
+
+### Data Protection
+- Implement proper access controls
+- Use role-based permissions (spatie/laravel-permission)
+- Encrypt sensitive data
+- Regular security audits
+
+## Documentation Standards
+
+### Code Documentation
+- Use clear, descriptive comments
+- Document complex business logic
+- Include type definitions
+- Maintain up-to-date README files
+
+### API Documentation
+- Document all API endpoints
+- Include request/response examples
+- Specify required permissions
+- Maintain changelog for API versions
+
+---
+
+## Quick Reference
+
+### Common Commands
+```bash
+# Laravel commands
+php artisan make:controller --resource
+php artisan make:model -mfr
+php artisan make:request
+
+# Frontend commands
+npm run dev
+npm run build
+npm run type-check
+```
+
+### File Naming Conventions
+- **Controllers**: PascalCase (`UserController.php`)
+- **Models**: PascalCase (`User.php`)
+- **Components**: PascalCase (`UserProfile.tsx`)
+- **Pages**: PascalCase (`UserDashboard.tsx`)
+- **Types**: PascalCase (`UserType.ts`)
+- **Utilities**: camelCase (`userHelpers.ts`)
+
+### Import Patterns
+```typescript
+// React imports
+import { useState, useEffect } from 'react';
+import { usePage, useForm } from '@inertiajs/react';
+
+// Component imports
+import { Button } from '@/components/ui/button';
+import { User } from 'lucide-react';
+
+// Type imports
+import type { User as UserType } from '@/types';
+```
+
+Remember: Focus on simplicity, reliability, and maintainability. When in doubt, choose the simpler solution that works reliably over the complex one that might be more "elegant".
+
+
