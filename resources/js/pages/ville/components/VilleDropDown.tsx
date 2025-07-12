@@ -20,6 +20,7 @@ import { MoreHorizontal } from "lucide-react";
 import { useForm } from "@inertiajs/react";
 import toast from "react-hot-toast";
 import ProductDialogEdit from "@/pages/ville/components/VilleEditDialogEdit";
+import { usePermissions } from '@/hooks/use-permissions';
 
 type MenuItem =
   | {
@@ -40,6 +41,7 @@ export default function ProductDropDown({ row }: { row: Row<Product> }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { delete: destroy , post} = useForm();
+  const { can } = usePermissions();
 
   function handleEdit() {
     // Fermer le dropdown avant d'ouvrir le dialog
@@ -103,12 +105,22 @@ export default function ProductDropDown({ row }: { row: Row<Product> }) {
     }
   }
 
+  // Construire le menu en fonction des permissions
   const menuItems: MenuItem[] = [
-    { icon: <MdContentCopy />, label: "Copy", className: "" },
-    { icon: <FaRegEdit />, label: "Edit", className: "" },
-    { separator: true } as const,
-    { icon: <MdOutlineDelete className="text-lg" />, label: "Delete", className: "text-red-600" }
+    // Copy - nécessite villes.create pour créer une copie
+    ...(can('villes.create') ? [{ icon: <MdContentCopy />, label: "Copy", className: "" }] : []),
+    // Edit - nécessite villes.edit
+    ...(can('villes.edit') ? [{ icon: <FaRegEdit />, label: "Edit", className: "" }] : []),
+    // Séparateur seulement si on a des actions ET une action de suppression
+    ...(((can('villes.create') || can('villes.edit')) && can('villes.delete')) ? [{ separator: true } as const] : []),
+    // Delete - nécessite villes.delete
+    ...(can('villes.delete') ? [{ icon: <MdOutlineDelete className="text-lg" />, label: "Delete", className: "text-red-600" }] : [])
   ];
+
+  // Si aucune action n'est disponible, ne pas afficher le dropdown
+  if (menuItems.length === 0) {
+    return null;
+  }
 
   return (
     <div>

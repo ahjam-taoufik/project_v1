@@ -15,6 +15,11 @@ class VilleController extends Controller
      */
     public function index():Response
     {
+        // Vérifier la permission de voir les villes
+        if (!auth()->user()->can('villes.view')) {
+            abort(403, 'Vous n\'avez pas l\'autorisation de voir les villes.');
+        }
+
         $villes=Ville::latest()->get();
          return Inertia::render('ville/index',
          ['villes' => $villes]);
@@ -25,7 +30,10 @@ class VilleController extends Controller
      */
     public function create()
     {
-        //
+        // Vérifier la permission de créer une ville
+        if (!auth()->user()->can('villes.create')) {
+            abort(403, 'Vous n\'avez pas l\'autorisation de créer une ville.');
+        }
     }
 
     /**
@@ -33,6 +41,11 @@ class VilleController extends Controller
      */
    public function store(VilleRequest $request)
    {
+        // Vérifier la permission de créer une ville
+        if (!auth()->user()->can('villes.create')) {
+            abort(403, 'Vous n\'avez pas l\'autorisation de créer une ville.');
+        }
+
         try {
             $ville = Ville::create([
                 'nameVille' => $request->validated()['nameVille'],
@@ -44,12 +57,16 @@ class VilleController extends Controller
             return redirect()->back()->withErrors(['message' => 'Erreur lors de la création: ' . $e->getMessage()])->withInput();
         }
     }
+
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        // Vérifier la permission de voir les villes
+        if (!auth()->user()->can('villes.view')) {
+            abort(403, 'Vous n\'avez pas l\'autorisation de voir cette ville.');
+        }
     }
 
     /**
@@ -57,8 +74,10 @@ class VilleController extends Controller
      */
     public function edit(Ville $ville)
     {
-
-
+        // Vérifier la permission d'éditer une ville
+        if (!auth()->user()->can('villes.edit')) {
+            abort(403, 'Vous n\'avez pas l\'autorisation de modifier cette ville.');
+        }
     }
 
     /**
@@ -66,21 +85,23 @@ class VilleController extends Controller
      */
     public function update(VilleRequest $request, Ville $ville)
     {
-            try {
-                    $ville->nameVille = $request->nameVille;
-                    $ville->save();
+        // Vérifier la permission d'éditer une ville
+        if (!auth()->user()->can('villes.edit')) {
+            abort(403, 'Vous n\'avez pas l\'autorisation de modifier cette ville.');
+        }
 
-                    if ($ville) {
-                         return redirect()->route('villes.index')->with('success', 'Ville updated successfully.');
-                     }
-                    return redirect()->back()->with('error', 'Unable to uipdate Ville. Please try again.');
+        try {
+                $ville->nameVille = $request->nameVille;
+                $ville->save();
 
+                if ($ville) {
+                     return redirect()->route('villes.index')->with('success', 'Ville updated successfully.');
+                 }
+                return redirect()->back()->with('error', 'Unable to uipdate Ville. Please try again.');
 
-            } catch (\Exception $th) {
-                return redirect()->back()->with('error', 'Failed to update Ville.');
-            }
-
-
+        } catch (\Exception $th) {
+            return redirect()->back()->with('error', 'Failed to update Ville.');
+        }
     }
 
     /**
@@ -88,6 +109,11 @@ class VilleController extends Controller
      */
      public function destroy(Ville $ville)
     {
+        // Vérifier la permission de supprimer une ville
+        if (!auth()->user()->can('villes.delete')) {
+            abort(403, 'Vous n\'avez pas l\'autorisation de supprimer cette ville.');
+        }
+
         try {
             if ($ville) {
                 $ville->delete();

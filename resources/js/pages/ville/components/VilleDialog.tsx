@@ -17,12 +17,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import toast from 'react-hot-toast';
+import { usePermissions } from '@/hooks/use-permissions';
 
 export default function ProductDialog() {
   const [open, setOpen] = useState(false);
+  const { can } = usePermissions();
   const { data, setData, post, errors, reset, processing } = useForm({
     nameVille: "",
   });
+
+  // Ne pas afficher le bouton si l'utilisateur n'a pas la permission
+  if (!can('villes.create')) {
+    return null;
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
