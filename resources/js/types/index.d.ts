@@ -2,7 +2,7 @@ import { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
 
 export interface Auth {
-    user: User;
+    user: User | null;
 }
 
 export interface BreadcrumbItem {
@@ -54,7 +54,8 @@ export interface User {
     email: string;
     avatar?: string;
     email_verified_at: string | null;
-    roles?: Role[];
+    roles?: string[];
+    permissions?: Permission[];
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
@@ -76,9 +77,27 @@ export interface Permission {
   updated_at: string;
 }
 
-export interface PageProps<T extends Record<string, unknown> = Record<string, unknown>> {
+export interface PageProps<T extends Record<string, unknown> = Record<string, unknown>> extends T {
   auth: {
     user: User;
   };
   errors: Record<string, string>;
-} & T;
+}
+
+export interface Client {
+  id: number;
+  code: string;
+  fullName: string;
+  idVille: number;
+  idSecteur: number;
+  created_at: string;
+  updated_at: string;
+  ville: {
+    id: number;
+    nameVille: string;
+  };
+  secteur: {
+    id: number;
+    nameSecteur: string;
+  };
+}

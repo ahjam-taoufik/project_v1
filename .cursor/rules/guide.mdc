@@ -1,0 +1,518 @@
+# 🚀 Claude Development Guide - Laravel 12 Inventory Management System
+
+## 📋 Project Overview
+
+Your project is a modern **Laravel 12 Inventory Management System** with the following tech stack:
+
+### Backend Stack
+- **Laravel 12** (PHP 8.2+)
+- **Database**: SQLite (default), MySQL/MariaDB/PostgreSQL ready
+- **Authentication**: Laravel Breeze with session-based auth
+- **Permissions**: spatie/laravel-permission package
+- **Queue System**: Database-driven
+- **Cache**: Database-based caching
+- **Mail**: Log driver (development)
+
+### Frontend Stack
+- **React 19** with **TypeScript 5.7**
+- **Inertia.js 2.0** for SPA functionality
+- **TailwindCSS 4.0** + **shadcn/ui** components
+- **Vite 6.0** for building
+- **SSR enabled** for better SEO/performance
+
+## 🛠️ Configuration Analysis & Claude Usage
+
+### 1. Application Configuration (`config/app.php`)
+**When to use with Claude:**
+- ✅ Environment setup questions
+- ✅ Timezone/locale configuration
+- ✅ Debug mode troubleshooting
+- ✅ Maintenance mode implementation
+
+**Current Settings:**
+```php
+'name' => env('APP_NAME', 'Laravel'),
+'env' => env('APP_ENV', 'production'),
+'debug' => (bool) env('APP_DEBUG', false),
+'url' => env('APP_URL', 'http://localhost'),
+'timezone' => 'UTC',
+'locale' => env('APP_LOCALE', 'en'),
+```
+
+**Claude Tasks:**
+- Help configure environment variables
+- Assist with deployment configurations
+- Debug environment-specific issues
+
+### 2. Authentication (`config/auth.php`)
+**When to use with Claude:**
+- ✅ Authentication flow modifications
+- ✅ Custom guard implementations
+- ✅ Password reset customization
+- ✅ Multi-authentication systems
+
+**Current Setup:**
+- Single `web` guard with session driver
+- Eloquent user provider
+- Password reset tokens valid for 60 minutes
+- Password confirmation timeout: 3 hours
+
+**Claude Tasks:**
+- Implement API authentication with Sanctum
+- Create custom authentication middleware
+- Add social login integrations
+- Build role-based authentication flows
+
+### 3. Database Configuration (`config/database.php`)
+**When to use with Claude:**
+- ✅ Database connection issues
+- ✅ Migration strategies
+- ✅ Query optimization
+- ✅ Multi-database setups
+
+**Current Setup:**
+- Default: SQLite (`database.sqlite`)
+- Ready for MySQL, MariaDB, PostgreSQL
+- Redis configuration available
+- Foreign key constraints enabled
+
+**Claude Tasks:**
+- Help optimize database queries
+- Design complex migration strategies
+- Set up database indexing
+- Configure read/write splitting
+
+### 4. Cache Configuration (`config/cache.php`)
+**When to use with Claude:**
+- ✅ Performance optimization
+- ✅ Cache strategy implementation
+- ✅ Redis/Memcached setup
+- ✅ Cache invalidation patterns
+
+**Current Setup:**
+- Default: Database caching
+- Supports: Array, File, Memcached, Redis, DynamoDB
+
+**Claude Tasks:**
+- Implement intelligent caching strategies
+- Design cache invalidation logic
+- Optimize cache key patterns
+- Set up distributed caching
+
+### 5. Inertia Configuration (`config/inertia.php`)
+**When to use with Claude:**
+- ✅ SSR implementation
+- ✅ Page component organization
+- ✅ Inertia middleware customization
+- ✅ React/Laravel data flow
+
+**Current Setup:**
+- SSR enabled (`http://127.0.0.1:13714`)
+- Page testing enabled
+- TypeScript/JSX support
+
+**Claude Tasks:**
+- Optimize SSR performance
+- Design component architecture
+- Handle complex data sharing
+- Implement lazy loading strategies
+
+### 6. Permissions (`config/permission.php`)
+**When to use with Claude:**
+- ✅ Role-based access control design
+- ✅ Permission middleware creation
+- ✅ Complex authorization logic
+- ✅ Team-based permissions
+
+**Current Setup:**
+- Spatie Permission package
+- Standard table structure
+- 24-hour permission caching
+- No team feature (disabled)
+
+**Claude Tasks:**
+- Design permission hierarchies
+- Create authorization policies
+- Implement dynamic permissions
+- Build permission management UI
+
+### 7. Queue Configuration (`config/queue.php`)
+**When to use with Claude:**
+- ✅ Background job implementation
+- ✅ Queue worker optimization
+- ✅ Failed job handling
+- ✅ Job batching strategies
+
+**Current Setup:**
+- Default: Database queue
+- Supports: Sync, Beanstalkd, SQS, Redis
+- Job batching enabled
+- Failed jobs stored in database
+
+**Claude Tasks:**
+- Design job processing workflows
+- Implement job retry strategies
+- Create job monitoring systems
+- Optimize queue performance
+
+### 8. Session Configuration (`config/session.php`)
+**When to use with Claude:**
+- ✅ Session security improvements
+- ✅ Custom session handling
+- ✅ Session storage optimization
+- ✅ Cross-domain session management
+
+**Current Setup:**
+- Database-driven sessions
+- 2-hour lifetime
+- Secure cookie settings
+- CSRF protection enabled
+
+**Claude Tasks:**
+- Implement session-based features
+- Design secure session handling
+- Create session analytics
+- Optimize session storage
+
+### 9. Logging Configuration (`config/logging.php`)
+**When to use with Claude:**
+- ✅ Custom logging strategies
+- ✅ Log analysis and monitoring
+- ✅ Error tracking implementation
+- ✅ Performance logging
+
+**Current Setup:**
+- Default: Stack logging
+- Supports: Single, Daily, Slack, Syslog
+- Debug level logging
+- Deprecation warnings tracking
+
+**Claude Tasks:**
+- Implement structured logging
+- Create log monitoring dashboards
+- Set up error alerting
+- Design audit logging
+
+### 10. Mail Configuration (`config/mail.php`)
+**When to use with Claude:**
+- ✅ Email system implementation
+- ✅ Custom mail drivers
+- ✅ Email template design
+- ✅ Mail queue optimization
+
+**Current Setup:**
+- Default: Log driver (development)
+- Supports: SMTP, SES, Postmark, Resend
+- Failover and round-robin mailers
+
+**Claude Tasks:**
+- Design email notification systems
+- Implement transactional emails
+- Create email templates
+- Set up email analytics
+
+### 11. Filesystem Configuration (`config/filesystems.php`)
+**When to use with Claude:**
+- ✅ File upload systems
+- ✅ Cloud storage integration
+- ✅ Image processing workflows
+- ✅ File security implementation
+
+**Current Setup:**
+- Default: Local storage
+- Public disk configured
+- S3 storage ready
+- Storage linking enabled
+
+**Claude Tasks:**
+- Implement file upload features
+- Design image processing pipelines
+- Set up cloud storage
+- Create file management systems
+
+### 12. Services Configuration (`config/services.php`)
+**When to use with Claude:**
+- ✅ Third-party API integration
+- ✅ External service configuration
+- ✅ Webhook implementations
+- ✅ Service authentication
+
+**Current Setup:**
+- Postmark, SES, Resend ready
+- Slack notifications configured
+
+**Claude Tasks:**
+- Integrate payment gateways
+- Set up notification services
+- Implement API integrations
+- Configure service monitoring
+
+## 🎯 When to Use Claude for Specific Tasks
+
+### ✅ **IDEAL CLAUDE TASKS**
+
+#### Backend Development
+- **Controllers & Routes**: Creating RESTful controllers, API endpoints
+- **Models & Relationships**: Eloquent models, complex relationships
+- **Middleware**: Custom authentication, authorization, validation
+- **Requests**: Form validation, custom request classes
+- **Database**: Migrations, seeders, query optimization
+- **Jobs & Queues**: Background processing, scheduled tasks
+- **Events & Listeners**: Event-driven architecture
+- **Policies**: Authorization logic, permission checking
+
+#### Frontend Development
+- **React Components**: TypeScript components, hooks, state management
+- **Inertia Pages**: Page components, form handling, navigation
+- **UI Components**: shadcn/ui customization, responsive design
+- **Type Definitions**: TypeScript interfaces, type safety
+- **State Management**: Complex state logic, data flow
+- **Performance**: Component optimization, lazy loading
+
+#### System Integration
+- **API Integration**: External service integration
+- **Testing**: Feature tests, unit tests, E2E testing
+- **Deployment**: Configuration, environment setup
+- **Performance**: Query optimization, caching strategies
+- **Security**: Authentication flows, permission systems
+
+### ❌ **AVOID CLAUDE FOR**
+
+- **Simple Configuration Changes**: Basic .env modifications
+- **Package Installation**: Running composer/npm commands
+- **Database Seeding**: Simple data insertion
+- **Static Content**: Basic text/content updates
+- **Server Management**: Server configuration, deployment scripts
+
+## 🚀 Best Practices for Working with Claude
+
+### 1. **Provide Context**
+Always share:
+- Current file structure
+- Relevant configuration
+- Error messages (complete stack traces)
+- Expected vs actual behavior
+
+### 2. **Be Specific**
+Instead of: *"Fix my authentication"*
+Say: *"Users can't log in after adding spatie/permission. Getting session token mismatch error."*
+
+### 3. **Break Down Complex Tasks**
+- Start with small, focused changes
+- Test each modification before proceeding
+- Build incrementally rather than large refactors
+
+### 4. **Follow Project Standards**
+Your project follows:
+- PSR-12 coding standards
+- TypeScript strict mode
+- TailwindCSS utility-first approach
+- Laravel 12 modern conventions
+
+### 5. **Test-Driven Approach**
+- Request tests for critical functionality
+- Use Pest PHP for backend testing
+- Implement React Testing Library for frontend
+
+## 📝 Quick Command Reference
+
+### Development Commands
+```bash
+# Start development (Laravel + Vite + Queue)
+composer dev
+
+# With SSR
+composer dev:ssr
+
+# Frontend only
+npm run dev
+
+# Build production
+npm run build
+
+# Build with SSR
+npm run build:ssr
+```
+
+### Laravel Commands
+```bash
+# Make controllers with resources
+php artisan make:controller ProductController --resource
+
+# Make models with migration, factory, seeder
+php artisan make:model Product -mfs
+
+# Make requests
+php artisan make:request ProductRequest
+
+# Run migrations
+php artisan migrate
+
+# Seed database
+php artisan db:seed
+```
+
+### Testing Commands
+```bash
+# Run all tests
+composer test
+
+# Run specific test
+php artisan test --filter ProductTest
+```
+
+### Code Quality Commands
+```bash
+# Format code
+npm run format
+
+# Check formatting
+npm run format:check
+
+# Lint code
+npm run lint
+
+# Type check
+npm run types
+```
+
+## 🎯 Project-Specific Claude Workflows
+
+### For Inventory Management Features
+1. **Models First**: Define Product, Category, Supplier models
+2. **Migrations**: Create tables with proper relationships
+3. **Controllers**: Implement CRUD operations
+4. **Requests**: Add validation rules
+5. **Frontend**: Create React components with TypeScript
+6. **Permissions**: Add role-based access control
+7. **Testing**: Write feature tests
+
+### For User Management
+1. **Extend User Model**: Add inventory-related fields
+2. **Permissions**: Define inventory permissions
+3. **Policies**: Create authorization policies
+4. **Components**: Build user management UI
+5. **Forms**: Implement role assignment forms
+
+### For Reporting Features
+1. **Jobs**: Background report generation
+2. **Caching**: Cache expensive queries
+3. **Exports**: PDF/Excel generation
+4. **Charts**: Data visualization components
+5. **Scheduling**: Automated report generation
+
+## 🔧 Environment Variables Guide
+
+### Required Environment Variables
+```env
+# Application
+APP_NAME="Laravel Inventory"
+APP_ENV=local
+APP_KEY=base64:...
+APP_DEBUG=true
+APP_URL=http://localhost
+
+# Database
+DB_CONNECTION=sqlite
+DB_DATABASE=database/database.sqlite
+
+# Cache
+CACHE_STORE=database
+
+# Session
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+
+# Queue
+QUEUE_CONNECTION=database
+
+# Mail
+MAIL_MAILER=log
+
+# Logging
+LOG_CHANNEL=stack
+LOG_LEVEL=debug
+```
+
+### Optional Environment Variables
+```env
+# Locale
+APP_LOCALE=fr
+APP_FALLBACK_LOCALE=en
+
+# Database (MySQL/PostgreSQL)
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Redis
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+
+# Mail (Production)
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+
+# AWS S3
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=
+```
+
+## 🏗️ Architecture Patterns
+
+### Laravel 12 Specific Patterns
+- **Service Providers**: Minimal usage, mainly AppServiceProvider
+- **Middleware**: Registered in `bootstrap/app.php`
+- **Event Discovery**: Auto-discovery enabled
+- **Policy Discovery**: Auto-discovery enabled
+- **Console Commands**: Defined in `routes/console.php`
+
+### React/Inertia Patterns
+- **Page Components**: Stored in `resources/js/pages/`
+- **Shared Components**: Stored in `resources/js/components/`
+- **Layouts**: Nested layout system
+- **Type Safety**: Full TypeScript integration
+- **State Management**: Inertia props + Zustand for complex state
+
+### Permission Integration Patterns
+- **Backend**: Middleware + Policies
+- **Frontend**: Custom hooks + Guard components
+- **Data Sharing**: Inertia middleware shares permissions
+- **Caching**: 24-hour permission caching
+
+## 🚨 Common Issues & Solutions
+
+### 1. **Inertia Version Mismatch**
+**Problem**: Component not updating after data change
+**Solution**: Check Inertia version header, use `router.reload()`
+
+### 2. **Permission Cache Issues**
+**Problem**: Permission changes not reflected immediately
+**Solution**: Clear permission cache with `php artisan permission:cache-reset`
+
+### 3. **TypeScript Errors**
+**Problem**: Type errors in React components
+**Solution**: Update `resources/js/types/index.d.ts` with proper interfaces
+
+### 4. **SSR Build Failures**
+**Problem**: SSR build fails with missing modules
+**Solution**: Check SSR bundle configuration in `vite.config.ts`
+
+### 5. **Queue Jobs Not Processing**
+**Problem**: Jobs stuck in database queue
+**Solution**: Run `php artisan queue:work` or check queue worker configuration
+
+This guide should help you work more effectively with Claude on your Laravel 12 Inventory Management System. Remember to always test changes incrementally and maintain the high standards set by your project configuration!
+description:
+globs:
+alwaysApply: false
+---

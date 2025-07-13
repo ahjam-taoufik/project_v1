@@ -13,8 +13,8 @@ class ClearAllCache extends Command
     {
         $this->info('🔄 Nettoyage de tous les caches Laravel...');
 
-        $this->callSilent('cache:clear');
         $this->callSilent('config:clear');
+        $this->callSilent('cache:clear');
         $this->callSilent('route:clear');
         $this->callSilent('view:clear');
         $this->callSilent('optimize:clear');
@@ -25,6 +25,6 @@ class ClearAllCache extends Command
 
         $this->info('✅ Tous les caches ont été nettoyés et régénérés.');
 
-        return Command::SUCCESS;
+        return self::SUCCESS;
     }
 }

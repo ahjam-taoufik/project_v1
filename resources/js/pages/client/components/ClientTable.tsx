@@ -1,6 +1,5 @@
 "use client";
 
-// import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -19,7 +18,6 @@ import {
   getSortedRowModel,
   useReactTable,
   FilterFn,
-
 } from "@tanstack/react-table";
 
 import {
@@ -31,29 +29,26 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Dispatch, SetStateAction, useEffect, useState , } from "react";
-import PaginationSelection from "@/pages/ville/components/PaginationSelection";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import PaginationSelection from "@/pages/client/components/PaginationSelection";
 import { Badge } from "@/components/ui/badge";
 
-// import { usePage } from "@inertiajs/react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export interface PaginationType {
+export type PaginationType = {
   pageIndex: number;
   pageSize: number;
-}
+};
 
-// Define custom filter types
 declare module "@tanstack/table-core" {
   interface FilterFns {
     multiSelect: FilterFn<unknown>;
   }
 }
 
-// Define the custom filter function
 const multiSelectFilter: FilterFn<unknown> = (
   row,
   columnId,
@@ -64,21 +59,14 @@ const multiSelectFilter: FilterFn<unknown> = (
   return filterValue.length === 0 || lowercaseFilterValues.includes(rowValue);
 };
 
-// console.log("multiSelectFilter", multiSelectFilter);
-
-export function ProductTable<TData, TValue>({
+export function ClientTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-
-
-
-
   const [pagination, setPagination] = useState<PaginationType>({
     pageIndex: 0,
     pageSize: 8,
   });
-
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -88,14 +76,12 @@ export function ProductTable<TData, TValue>({
 
   useEffect(() => {
     setColumnFilters((prev) => {
-      // Remove both status and category filters
       const baseFilters = prev.filter(
         (filter) => filter.id !== "status" && filter.id !== "category"
       );
 
       const newFilters = [...baseFilters];
 
-      // Add status filter if there are selected statuses
       if (selectedStatuses.length > 0) {
         newFilters.push({
           id: "status",
@@ -103,7 +89,6 @@ export function ProductTable<TData, TValue>({
         });
       }
 
-      // Add category filter if there are selected categories
       if (selectedCategories.length > 0) {
         newFilters.push({
           id: "category",
@@ -111,32 +96,27 @@ export function ProductTable<TData, TValue>({
         });
       }
 
-    //   console.log("New Column Filters:", newFilters);
       return newFilters;
     });
 
-    // Set initial sorting for the "createdAt" column
     setSorting([
       {
         id: "created_at",
-
         desc: true,
       },
     ]);
   }, [selectedStatuses, selectedCategories]);
 
-
   const table = useReactTable({
     data,
     columns,
-
     state: {
-        pagination,
-        columnFilters,
-        sorting,
+      pagination,
+      columnFilters,
+      sorting,
     },
     filterFns: {
-        multiSelect: multiSelectFilter,
+      multiSelect: multiSelectFilter,
     },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -145,24 +125,22 @@ export function ProductTable<TData, TValue>({
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-
   });
 
   return (
     <div className="poppins">
-      <div className="flex flex-col gap-3 mb-8 mt-6 ">
-        <div className="flex items-center justify-between ">
+      <div className="flex flex-col gap-3 mb-8 mt-6">
+        <div className="flex items-center justify-between">
           <Input
-            value={(table.getColumn("nameVille")?.getFilterValue() as string) ?? ""}
+            value={(table.getColumn("fullName")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("nameVille")?.setFilterValue(event.target.value)
+              table.getColumn("fullName")?.setFilterValue(event.target.value)
             }
-            placeholder="Search by name..."
+            placeholder="Rechercher par nom..."
             className="max-w-sm h-10"
           />
         </div>
 
-        {/* filter area */}
         <FilterArea
           selectedStatuses={selectedStatuses}
           setSelectedStatuses={setSelectedStatuses}
@@ -171,7 +149,6 @@ export function ProductTable<TData, TValue>({
         />
       </div>
 
-      {/* Upcoming table */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -215,7 +192,7 @@ export function ProductTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Aucun résultat.
                 </TableCell>
               </TableRow>
             )}
@@ -223,62 +200,52 @@ export function ProductTable<TData, TValue>({
         </Table>
       </div>
 
-      <div className="flex items-center justify-between mt-5">
-        <PaginationSelection
-          pagination={pagination}
-          setPagination={setPagination}
-        />
-
-        <div className="flex gap-6 items-center">
-           <span className="text-sm  text-gray-500 hidden sm:block">
-            {pagination.pageSize === 999999 ? 
-              `Showing all ${data.length} results` : 
-              `Page ${pagination.pageIndex + 1} of ${table.getPageCount()}`
-            }
-           </span>
-          <div className="flex items-center justify-end space-x-2 py-4">
-
+      <div className="flex items-center justify-between space-x-2 py-4">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} sur{" "}
+          {table.getFilteredRowModel().rows.length} ligne(s) sélectionnée(s).
+        </div>
+        <div className="flex items-center space-x-6 lg:space-x-8">
+          <PaginationSelection
+            pagination={pagination}
+            setPagination={setPagination}
+          />
+          <div className="flex items-center space-x-2">
             <Button
               variant="outline"
-              className="size-9 w-12"
-              size="sm"
+              className="hidden h-8 w-8 p-0 lg:flex"
               onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage() || pagination.pageSize === 999999}
+              disabled={!table.getCanPreviousPage()}
             >
-              <BiFirstPage />
+              <span className="sr-only">Aller à la première page</span>
+              <BiFirstPage className="h-4 w-4" />
             </Button>
-
-
             <Button
               variant="outline"
-              className="size-9 w-12"
-              size="sm"
+              className="h-8 w-8 p-0"
               onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage() || pagination.pageSize === 999999}
+              disabled={!table.getCanPreviousPage()}
             >
-              <GrFormPrevious />
+              <span className="sr-only">Aller à la page précédente</span>
+              <GrFormPrevious className="h-4 w-4" />
             </Button>
-
-
             <Button
-              className="size-9 w-12"
               variant="outline"
-              size="sm"
+              className="h-8 w-8 p-0"
               onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage() || pagination.pageSize === 999999}
+              disabled={!table.getCanNextPage()}
             >
-              <GrFormNext />
+              <span className="sr-only">Aller à la page suivante</span>
+              <GrFormNext className="h-4 w-4" />
             </Button>
-
-
             <Button
-              className="size-9 w-12"
               variant="outline"
-              size="sm"
+              className="hidden h-8 w-8 p-0 lg:flex"
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage() || pagination.pageSize === 999999}
+              disabled={!table.getCanNextPage()}
             >
-              <BiLastPage />
+              <span className="sr-only">Aller à la dernière page</span>
+              <BiLastPage className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -287,8 +254,7 @@ export function ProductTable<TData, TValue>({
   );
 }
 
-function FilterArea(
-    {
+function FilterArea({
   selectedStatuses,
   setSelectedStatuses,
   selectedCategories,
@@ -298,10 +264,9 @@ function FilterArea(
   setSelectedStatuses: Dispatch<SetStateAction<string[]>>;
   selectedCategories: string[];
   setSelectedCategories: Dispatch<SetStateAction<string[]>>;
-}
-) {
+}) {
   return (
-    <div className="flex gap-3 poppins ">
+    <div className="flex gap-3 poppins">
       {selectedStatuses.length > 0 && (
         <div className="border-dashed border rounded-sm p-1 flex gap-2 items-center px-2 text-sm">
           <span className="text-gray-600">Status</span>
@@ -323,7 +288,6 @@ function FilterArea(
           </div>
         </div>
       )}
-
 
       {selectedCategories.length > 0 && (
         <div className="border-dashed border rounded-sm p-1 flex gap-2 items-center px-2 text-sm">

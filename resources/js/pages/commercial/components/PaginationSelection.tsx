@@ -9,7 +9,8 @@ import {
 } from "@/components/ui/select";
 
 import { Dispatch, SetStateAction } from "react";
-import { PaginationType } from "./ProductTable";
+import { PaginationType } from "./CommercialTable";
+
 export default function PaginationSelection({
   pagination,
   setPagination,
@@ -53,4 +54,4 @@ export default function PaginationSelection({
       </Select>
     </div>
   );
-}
+} 

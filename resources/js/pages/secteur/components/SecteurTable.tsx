@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/table";
 
 import { Dispatch, SetStateAction, useEffect, useState , } from "react";
-import PaginationSelection from "@/pages/ville/components/PaginationSelection";
+import PaginationSelection from "@/pages/secteur/components/PaginationSelection";
 import { Badge } from "@/components/ui/badge";
 
 // import { usePage } from "@inertiajs/react";
@@ -231,7 +231,10 @@ export function SecteurTable<TData, TValue>({
 
         <div className="flex gap-6 items-center">
            <span className="text-sm  text-gray-500 hidden sm:block">
-            Page {pagination.pageIndex + 1} of {table.getPageCount()}
+            {pagination.pageSize === 999999 ? 
+              `Showing all ${data.length} results` : 
+              `Page ${pagination.pageIndex + 1} of ${table.getPageCount()}`
+            }
            </span>
           <div className="flex items-center justify-end space-x-2 py-4">
 
@@ -240,7 +243,7 @@ export function SecteurTable<TData, TValue>({
               className="size-9 w-12"
               size="sm"
               onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
+              disabled={!table.getCanPreviousPage() || pagination.pageSize === 999999}
             >
               <BiFirstPage />
             </Button>
@@ -251,7 +254,7 @@ export function SecteurTable<TData, TValue>({
               className="size-9 w-12"
               size="sm"
               onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
+              disabled={!table.getCanPreviousPage() || pagination.pageSize === 999999}
             >
               <GrFormPrevious />
             </Button>
@@ -262,7 +265,7 @@ export function SecteurTable<TData, TValue>({
               variant="outline"
               size="sm"
               onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
+              disabled={!table.getCanNextPage() || pagination.pageSize === 999999}
             >
               <GrFormNext />
             </Button>
@@ -273,7 +276,7 @@ export function SecteurTable<TData, TValue>({
               variant="outline"
               size="sm"
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
+              disabled={!table.getCanNextPage() || pagination.pageSize === 999999}
             >
               <BiLastPage />
             </Button>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CommercialController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SecteurController;
 use App\Http\Controllers\UserController;
@@ -15,13 +17,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+
     Route::resource('villes', VilleController::class);
     Route::resource('secteurs', SecteurController::class);
+    Route::resource('commerciaux', CommercialController::class)->parameters(['commerciaux' => 'commercial']);
+    Route::resource('clients', ClientController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
 
-
-
+    // API route pour récupérer les secteurs par ville
+    Route::get('/api/secteurs-by-ville', [ClientController::class, 'getSecteursByVille'])->name('api.secteurs-by-ville');
 });
 
 require __DIR__.'/settings.php';

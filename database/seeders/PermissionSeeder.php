@@ -14,44 +14,41 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-            'ville.view',
-            'ville.edit',
-            'ville.delete',
-            'ville.create',
-            'role.view',
-            'role.edit',
-            'role.delete',
-            'role.create',
-            'user.view',
-            'user.edit',
-            'user.delete',
-            'user.create',
-            'permission.view',
-            'permission.edit',
-            'permission.delete',
-            'permission.create',
-            'permission.assign',
-            'permission.revoke',
-            'permission.list',
-            'reglement.view',
-            'reglement.edit',
-            'reglement.delete',
-            'reglement.create',
-            'reglement.list',
-            'reglement.assign',
-            'reglement.revoke',
-            'commune.view',
-            'commune.edit',
-            'commune.delete',
-            'commune.create',
-            'commune.list',
-            'commune.assign',
-            'commune.revoke',
-
-
-
-
-
+                            // Permissions Utilisateurs
+                            'users.view',
+                            'users.create',
+                            'users.edit',
+                            'users.delete',
+                            // Permissions Commerciaux
+                            'commerciaux.view',
+                            'commerciaux.create',
+                            'commerciaux.edit',
+                            'commerciaux.delete',
+                            // Permissions Reglement
+                            'reglement.view',
+                            'reglement.create',
+                            'reglement.edit',
+                            'reglement.delete',
+                            // Permissions Rôles
+                            'roles.view',
+                            'roles.create',
+                            'roles.edit',
+                            'roles.delete',
+                            // Permissions Clients
+                            'clients.view',
+                            'clients.create',
+                            'clients.edit',
+                            'clients.delete',
+                            // Permissions Secteurs
+                            'secteurs.view',
+                            'secteurs.create',
+                            'secteurs.edit',
+                            'secteurs.delete',
+                            // Permissions Villes
+                            'villes.view',
+                            'villes.create',
+                            'villes.edit',
+                            'villes.delete',
 
         ];
 

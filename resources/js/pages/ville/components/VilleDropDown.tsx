@@ -17,7 +17,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { useForm } from "@inertiajs/react";
+import { useForm, router } from "@inertiajs/react";
 import toast from "react-hot-toast";
 import ProductDialogEdit from "@/pages/ville/components/VilleEditDialogEdit";
 import { usePermissions } from '@/hooks/use-permissions';
@@ -71,7 +71,9 @@ export default function ProductDropDown({ row }: { row: Row<Product> }) {
       const originalName = row.original.nameVille;
       const copiedName = `${originalName} - Copy`;
 
-    post(route('villes.store', { nameVille: copiedName }), {
+    router.post(route('villes.store'), {
+      nameVille: copiedName
+    }, {
       onSuccess: () => {
         toast.success('Ville copiée avec succès');
       },

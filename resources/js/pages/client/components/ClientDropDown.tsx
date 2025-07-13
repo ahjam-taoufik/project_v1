@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Row } from "@tanstack/react-table";
-import { Secteur } from "@/pages/secteur/config/columns";
+import { Client } from "@/pages/client/config/columns";
 
 import { FaRegEdit } from "react-icons/fa";
 import { MdContentCopy, MdOutlineDelete } from "react-icons/md";
@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 import { useForm, router } from "@inertiajs/react";
 import toast from "react-hot-toast";
-import SecteurDialogEdit from "@/pages/secteur/components/SecteurEditDialogEdit";
+import ClientEditDialog from "@/pages/client/components/ClientEditDialog";
 import { usePermissions } from '@/hooks/use-permissions';
 
 type MenuItem =
@@ -37,56 +37,55 @@ type MenuItem =
       className?: undefined;
     };
 
-export default function ProductDropDown({ row }: { row: Row<Secteur> }) {
+export default function ClientDropDown({ row }: { row: Row<Client> }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { delete: destroy } = useForm();
   const { can } = usePermissions();
 
   function handleEdit() {
-    // Fermer le dropdown avant d'ouvrir le dialog
     setIsDropdownOpen(false);
-
-    // Petit délai pour permettre au dropdown de se fermer complètement
     setTimeout(() => {
       setIsEditDialogOpen(true);
     }, 100);
   }
 
   async function handleDelete() {
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce secteur ?')) {
-      destroy(route('secteurs.destroy', { secteur: row.original.id }), {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
+      destroy(route('clients.destroy', { client: row.original.id }), {
         onSuccess: () => {
-          toast.success('Secteur supprimée avec succès');
+          toast.success('Client supprimé avec succès');
         },
         onError: () => {
-          toast.error('Erreur lors de la suppression de Secteur');
+          toast.error('Erreur lors de la suppression du client');
         },
         preserveScroll: true,
       });
     }
   }
-   async function handleCopy() {
-     if (confirm('Êtes-vous sûr de vouloir faire une copie de ce secteur ?')) {
-      const originalName = row.original.nameSecteur;
-      const copiedName = `${originalName} - Copy`;
 
-      // Envoyer les données directement avec le router
-      router.post(route('secteurs.store'), {
-        nameSecteur: copiedName,
-        idVille: row.original.idVille
+  async function handleCopy() {
+    if (confirm('Êtes-vous sûr de vouloir faire une copie de ce client ?')) {
+      const originalCode = row.original.code;
+      const copiedCode = `${originalCode}-Copy`;
+
+      router.post(route('clients.store'), {
+        code: copiedCode,
+        fullName: row.original.fullName,
+        idVille: row.original.idVille,
+        idSecteur: row.original.idSecteur
       }, {
-      onSuccess: () => {
-          toast.success('Secteur copié avec succès');
-      },
-      onError: () => {
-          toast.error('Erreur lors de la copie du secteur');
-      },
-      preserveScroll: true,
-    });
+        onSuccess: () => {
+          toast.success('Client copié avec succès');
+        },
+        onError: (errors) => {
+          console.error('Erreurs lors de la copie:', errors);
+          toast.error('Erreur lors de la copie du client');
+        },
+        preserveScroll: true,
+      });
+    }
   }
-}
-
 
   function handleClickedItem(item: MenuItem) {
     if (item.label === "Delete") {
@@ -96,32 +95,25 @@ export default function ProductDropDown({ row }: { row: Row<Secteur> }) {
       }, 100);
     }
 
-     if (item.label === "Copy") {
+    if (item.label === "Copy") {
       setIsDropdownOpen(false);
       setTimeout(() => {
         handleCopy();
       }, 100);
     }
 
-
     if (item.label === "Edit") {
       handleEdit();
     }
   }
 
-  // Construire le menu en fonction des permissions
   const menuItems: MenuItem[] = [
-    // Copy - nécessite secteurs.create pour créer une copie
-    ...(can('secteurs.create') ? [{ icon: <MdContentCopy />, label: "Copy", className: "" }] : []),
-    // Edit - nécessite secteurs.edit
-    ...(can('secteurs.edit') ? [{ icon: <FaRegEdit />, label: "Edit", className: "" }] : []),
-    // Séparateur seulement si on a des actions ET une action de suppression
-    ...(((can('secteurs.create') || can('secteurs.edit')) && can('secteurs.delete')) ? [{ separator: true } as const] : []),
-    // Delete - nécessite secteurs.delete
-    ...(can('secteurs.delete') ? [{ icon: <MdOutlineDelete className="text-lg" />, label: "Delete", className: "text-red-600" }] : [])
+    ...(can('clients.create') ? [{ icon: <MdContentCopy />, label: "Copy", className: "" }] : []),
+    ...(can('clients.edit') ? [{ icon: <FaRegEdit />, label: "Edit", className: "" }] : []),
+    ...(((can('clients.create') || can('clients.edit')) && can('clients.delete')) ? [{ separator: true } as const] : []),
+    ...(can('clients.delete') ? [{ icon: <MdOutlineDelete className="text-lg" />, label: "Delete", className: "text-red-600" }] : [])
   ];
 
-  // Si aucune action n'est disponible, ne pas afficher le dropdown
   if (menuItems.length === 0) {
     return null;
   }
@@ -144,43 +136,24 @@ export default function ProductDropDown({ row }: { row: Row<Secteur> }) {
                 className={`flex items-center gap-1 p-[10px] ${item.className}`}
                 onClick={() => handleClickedItem(item)}
                 onSelect={(e) => {
-                  // Empêcher la fermeture automatique pour Edit
                   if (item.label === "Edit") {
                     e.preventDefault();
                   }
                 }}
               >
                 {item.icon}
-                <span>{item.label}</span>
+                <span className="text-sm">{item.label}</span>
               </DropdownMenuItem>
             )
           )}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Dialog d'édition séparé */}
-      <SecteurDialogEdit
+      <ClientEditDialog
         isOpen={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
-        product={row.original}
+        client={row.original}
       />
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

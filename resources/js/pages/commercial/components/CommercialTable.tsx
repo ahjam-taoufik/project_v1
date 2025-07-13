@@ -1,6 +1,5 @@
 "use client";
 
-// import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -19,7 +18,6 @@ import {
   getSortedRowModel,
   useReactTable,
   FilterFn,
-
 } from "@tanstack/react-table";
 
 import {
@@ -31,11 +29,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Dispatch, SetStateAction, useEffect, useState , } from "react";
-import PaginationSelection from "@/pages/ville/components/PaginationSelection";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import PaginationSelection from "@/pages/commercial/components/PaginationSelection";
 import { Badge } from "@/components/ui/badge";
 
-// import { usePage } from "@inertiajs/react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -64,21 +61,14 @@ const multiSelectFilter: FilterFn<unknown> = (
   return filterValue.length === 0 || lowercaseFilterValues.includes(rowValue);
 };
 
-// console.log("multiSelectFilter", multiSelectFilter);
-
-export function ProductTable<TData, TValue>({
+export function CommercialTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-
-
-
-
   const [pagination, setPagination] = useState<PaginationType>({
     pageIndex: 0,
     pageSize: 8,
   });
-
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -111,25 +101,21 @@ export function ProductTable<TData, TValue>({
         });
       }
 
-    //   console.log("New Column Filters:", newFilters);
       return newFilters;
     });
 
-    // Set initial sorting for the "createdAt" column
+    // Set initial sorting for the "created_at" column
     setSorting([
       {
         id: "created_at",
-
         desc: true,
       },
     ]);
   }, [selectedStatuses, selectedCategories]);
 
-
   const table = useReactTable({
     data,
     columns,
-
     state: {
         pagination,
         columnFilters,
@@ -145,7 +131,6 @@ export function ProductTable<TData, TValue>({
     onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-
   });
 
   return (
@@ -153,9 +138,9 @@ export function ProductTable<TData, TValue>({
       <div className="flex flex-col gap-3 mb-8 mt-6 ">
         <div className="flex items-center justify-between ">
           <Input
-            value={(table.getColumn("nameVille")?.getFilterValue() as string) ?? ""}
+            value={(table.getColumn("commercial_fullName")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("nameVille")?.setFilterValue(event.target.value)
+              table.getColumn("commercial_fullName")?.setFilterValue(event.target.value)
             }
             placeholder="Search by name..."
             className="max-w-sm h-10"
@@ -171,7 +156,7 @@ export function ProductTable<TData, TValue>({
         />
       </div>
 
-      {/* Upcoming table */}
+      {/* Table */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -231,8 +216,8 @@ export function ProductTable<TData, TValue>({
 
         <div className="flex gap-6 items-center">
            <span className="text-sm  text-gray-500 hidden sm:block">
-            {pagination.pageSize === 999999 ? 
-              `Showing all ${data.length} results` : 
+            {pagination.pageSize === 999999 ?
+              `Showing all ${data.length} results` :
               `Page ${pagination.pageIndex + 1} of ${table.getPageCount()}`
             }
            </span>
@@ -248,7 +233,6 @@ export function ProductTable<TData, TValue>({
               <BiFirstPage />
             </Button>
 
-
             <Button
               variant="outline"
               className="size-9 w-12"
@@ -259,7 +243,6 @@ export function ProductTable<TData, TValue>({
               <GrFormPrevious />
             </Button>
 
-
             <Button
               className="size-9 w-12"
               variant="outline"
@@ -269,7 +252,6 @@ export function ProductTable<TData, TValue>({
             >
               <GrFormNext />
             </Button>
-
 
             <Button
               className="size-9 w-12"
@@ -287,8 +269,7 @@ export function ProductTable<TData, TValue>({
   );
 }
 
-function FilterArea(
-    {
+function FilterArea({
   selectedStatuses,
   setSelectedStatuses,
   selectedCategories,
@@ -298,8 +279,7 @@ function FilterArea(
   setSelectedStatuses: Dispatch<SetStateAction<string[]>>;
   selectedCategories: string[];
   setSelectedCategories: Dispatch<SetStateAction<string[]>>;
-}
-) {
+}) {
   return (
     <div className="flex gap-3 poppins ">
       {selectedStatuses.length > 0 && (
@@ -323,7 +303,6 @@ function FilterArea(
           </div>
         </div>
       )}
-
 
       {selectedCategories.length > 0 && (
         <div className="border-dashed border rounded-sm p-1 flex gap-2 items-center px-2 text-sm">
