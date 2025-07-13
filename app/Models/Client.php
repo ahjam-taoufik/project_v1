@@ -17,6 +17,10 @@ class Client extends Model
         'fullName',
         'idVille',
         'idSecteur',
+        'idCommercial',
+        'remise_special',
+        'pourcentage',
+        'telephone',
     ];
 
     /**
@@ -33,5 +37,13 @@ class Client extends Model
     public function secteur(): BelongsTo
     {
         return $this->belongsTo(Secteur::class, 'idSecteur');
+    }
+
+    /**
+     * Get the commercial that owns the client.
+     */
+    public function commercial(): BelongsTo
+    {
+        return $this->belongsTo(Commercial::class, 'idCommercial');
     }
 }

@@ -19,7 +19,19 @@ type Ville = {
     nameVille: string;
 };
 
-export default function Index({ villes }: { villes: Ville[] }) {
+type Commercial = {
+    id: number;
+    commercial_code: string;
+    commercial_fullName: string;
+};
+
+export default function Index({
+    villes,
+    commerciaux = []
+}: {
+    villes: Ville[];
+    commerciaux?: Commercial[];
+}) {
     const [isLoad, setIsLoad] = useState(false);
 
     useEffect(() => {
@@ -49,7 +61,7 @@ export default function Index({ villes }: { villes: Ville[] }) {
                 <Head title="Clients" />
                 <div className="poppins p-5 border w-full min-h-screen">
                     <Card className='flex flex-col shadow-none p-5'>
-                        <AppTable villes={villes} />
+                        <AppTable villes={villes} commerciaux={commerciaux} />
                     </Card>
                 </div>
             </AppLayout>

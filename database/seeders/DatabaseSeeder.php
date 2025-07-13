@@ -53,6 +53,7 @@ class DatabaseSeeder extends Seeder
             VilleSeeder::class,
             SecteurSeeder::class,
             CommercialSeeder::class,
+            ClientSeeder::class,
         ]);
     }
 }

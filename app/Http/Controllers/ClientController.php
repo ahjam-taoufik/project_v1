@@ -8,6 +8,7 @@ use App\Http\Requests\ClientRequest;
 use App\Models\Client;
 use App\Models\Ville;
 use App\Models\Secteur;
+use App\Models\Commercial;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -24,12 +25,14 @@ class ClientController extends Controller
             abort(403, 'Vous n\'avez pas l\'autorisation de voir les clients.');
         }
 
-        $clients = Client::with(['ville', 'secteur'])->latest()->get();
+        $clients = Client::with(['ville', 'secteur', 'commercial'])->latest()->get();
         $villes = Ville::all();
+        $commerciaux = Commercial::all();
 
         return Inertia::render('client/index', [
             'clients' => $clients,
-            'villes' => $villes
+            'villes' => $villes,
+            'commerciaux' => $commerciaux
         ]);
     }
 
@@ -60,6 +63,10 @@ class ClientController extends Controller
                 'fullName' => $request->validated()['fullName'],
                 'idVille' => $request->validated()['idVille'],
                 'idSecteur' => $request->validated()['idSecteur'],
+                'idCommercial' => $request->validated()['idCommercial'] ?? null,
+                'remise_special' => $request->validated()['remise_special'],
+                'pourcentage' => $request->validated()['pourcentage'],
+                'telephone' => $request->validated()['telephone'],
             ]);
 
             return redirect()->route('clients.index')->with('success', 'Client créé avec succès');
@@ -108,7 +115,11 @@ class ClientController extends Controller
                 'code' => $validatedData['code'],
                 'fullName' => $validatedData['fullName'],
                 'idVille' => $validatedData['idVille'],
-                'idSecteur' => $validatedData['idSecteur']
+                'idSecteur' => $validatedData['idSecteur'],
+                'idCommercial' => $validatedData['idCommercial'] ?? null,
+                'remise_special' => $validatedData['remise_special'],
+                'pourcentage' => $validatedData['pourcentage'],
+                'telephone' => $validatedData['telephone'],
             ]);
 
             return redirect()->route('clients.index')->with('success', 'Client mis à jour avec succès.');

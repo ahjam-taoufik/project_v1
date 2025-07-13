@@ -27,6 +27,12 @@ interface Secteur {
   nameSecteur: string;
 }
 
+interface Commercial {
+  id: number;
+  commercial_code: string;
+  commercial_fullName: string;
+}
+
 interface ClientEditDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -38,8 +44,9 @@ export default function ClientEditDialog({
   onOpenChange,
   client
 }: ClientEditDialogProps) {
-  const { props: { villes } } = usePage();
+  const { props: { villes, commerciaux } } = usePage();
   const villesArray = villes as Ville[];
+  const commerciauxArray = (commerciaux as Commercial[]) || [];
   const [secteurs, setSecteurs] = useState<Secteur[]>([]);
   const [loadingSecteurs, setLoadingSecteurs] = useState(false);
 
@@ -48,6 +55,10 @@ export default function ClientEditDialog({
     fullName: client.fullName || "",
     idVille: client.idVille || "",
     idSecteur: client.idSecteur || "",
+    idCommercial: client.idCommercial || "",
+    remise_special: client.remise_special || "",
+    pourcentage: client.pourcentage || "",
+    telephone: client.telephone || "",
   });
 
   // Charger les secteurs quand la ville change
@@ -115,13 +126,17 @@ export default function ClientEditDialog({
         fullName: client.fullName || "",
         idVille: client.idVille || "",
         idSecteur: client.idSecteur || "",
+        idCommercial: client.idCommercial || "",
+        remise_special: client.remise_special || "",
+        pourcentage: client.pourcentage || "",
+        telephone: client.telephone || "",
       });
     }
   }, [isOpen, client, setData]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Modifier Client</DialogTitle>
           <DialogDescription>
@@ -211,6 +226,88 @@ export default function ClientEditDialog({
             </div>
             {errors.idSecteur && (
               <p className="text-xs text-red-500 col-span-4">{errors.idSecteur}</p>
+            )}
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="idCommercial" className="text-right">
+                Commercial
+              </Label>
+              <select
+                id="idCommercial"
+                value={data.idCommercial}
+                required
+                onChange={(e) => setData('idCommercial', e.target.value)}
+                className="col-span-3 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="">
+                  Sélectionnez un commercial
+                </option>
+                {commerciauxArray.map((commercial) => (
+                  <option key={commercial.id} value={commercial.id.toString()}>
+                    {commercial.commercial_code} - {commercial.commercial_fullName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {errors.idCommercial && (
+              <p className="text-xs text-red-500 col-span-4">{errors.idCommercial}</p>
+            )}
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="remise_special" className="text-right">
+                Remise Spéciale (%)
+              </Label>
+              <Input
+                id="remise_special"
+                type="number"
+                step="0.01"
+                min="0"
+                max="100"
+                value={data.remise_special}
+                onChange={(e) => setData('remise_special', e.target.value)}
+                className="col-span-3"
+                required
+              />
+            </div>
+            {errors.remise_special && (
+              <p className="text-xs text-red-500 col-span-4">{errors.remise_special}</p>
+            )}
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="pourcentage" className="text-right">
+                Pourcentage
+              </Label>
+              <Input
+                id="pourcentage"
+                type="number"
+                step="0.01"
+                min="0"
+                max="100"
+                value={data.pourcentage}
+                onChange={(e) => setData('pourcentage', e.target.value)}
+                className="col-span-3"
+                required
+              />
+            </div>
+            {errors.pourcentage && (
+              <p className="text-xs text-red-500 col-span-4">{errors.pourcentage}</p>
+            )}
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="telephone" className="text-right">
+                Téléphone
+              </Label>
+              <Input
+                id="telephone"
+                type="tel"
+                value={data.telephone}
+                onChange={(e) => setData('telephone', e.target.value)}
+                className="col-span-3"
+                required
+              />
+            </div>
+            {errors.telephone && (
+              <p className="text-xs text-red-500 col-span-4">{errors.telephone}</p>
             )}
           </div>
           <DialogFooter>

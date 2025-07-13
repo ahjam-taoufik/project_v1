@@ -32,11 +32,26 @@ import {
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import PaginationSelection from "@/pages/client/components/PaginationSelection";
 import { Badge } from "@/components/ui/badge";
+import { CommercialDropDown } from "./CommercialDropDown";
+import { VilleDropDown } from "./VilleDropDown";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  commerciaux?: Commercial[];
+  villes?: Ville[];
 }
+
+type Commercial = {
+  id: number;
+  commercial_code: string;
+  commercial_fullName: string;
+};
+
+type Ville = {
+  id: number;
+  nameVille: string;
+};
 
 export type PaginationType = {
   pageIndex: number;
@@ -46,6 +61,7 @@ export type PaginationType = {
 declare module "@tanstack/table-core" {
   interface FilterFns {
     multiSelect: FilterFn<unknown>;
+    idMultiSelect: FilterFn<unknown>;
   }
 }
 
@@ -59,9 +75,33 @@ const multiSelectFilter: FilterFn<unknown> = (
   return filterValue.length === 0 || lowercaseFilterValues.includes(rowValue);
 };
 
+const idMultiSelectFilter: FilterFn<unknown> = (
+  row,
+  columnId,
+  filterValue: string[]
+) => {
+  const rowValue = row.getValue(columnId) as string;
+  // Convertir aussi le rowValue en string pour s'assurer de la cohérence
+  const rowValueStr = String(rowValue);
+  const filterValueStr = filterValue.map(val => String(val));
+
+  console.log('Filter Debug:', {
+    columnId,
+    rowValue,
+    rowValueStr,
+    filterValue,
+    filterValueStr,
+    match: filterValueStr.includes(rowValueStr)
+  });
+
+  return filterValue.length === 0 || filterValueStr.includes(rowValueStr);
+};
+
 export function ClientTable<TData, TValue>({
   columns,
   data,
+  commerciaux = [],
+  villes = [],
 }: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = useState<PaginationType>({
     pageIndex: 0,
@@ -73,11 +113,13 @@ export function ClientTable<TData, TValue>({
 
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCommerciaux, setSelectedCommerciaux] = useState<string[]>([]);
+  const [selectedVilles, setSelectedVilles] = useState<string[]>([]);
 
   useEffect(() => {
     setColumnFilters((prev) => {
       const baseFilters = prev.filter(
-        (filter) => filter.id !== "status" && filter.id !== "category"
+        (filter) => filter.id !== "status" && filter.id !== "category" && filter.id !== "idCommercial" && filter.id !== "idVille"
       );
 
       const newFilters = [...baseFilters];
@@ -96,6 +138,20 @@ export function ClientTable<TData, TValue>({
         });
       }
 
+      if (selectedCommerciaux.length > 0) {
+        newFilters.push({
+          id: "idCommercial",
+          value: selectedCommerciaux,
+        });
+      }
+
+      if (selectedVilles.length > 0) {
+        newFilters.push({
+          id: "idVille",
+          value: selectedVilles,
+        });
+      }
+
       return newFilters;
     });
 
@@ -105,7 +161,7 @@ export function ClientTable<TData, TValue>({
         desc: true,
       },
     ]);
-  }, [selectedStatuses, selectedCategories]);
+  }, [selectedStatuses, selectedCategories, selectedCommerciaux, selectedVilles]);
 
   const table = useReactTable({
     data,
@@ -117,6 +173,7 @@ export function ClientTable<TData, TValue>({
     },
     filterFns: {
       multiSelect: multiSelectFilter,
+      idMultiSelect: idMultiSelectFilter,
     },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -139,6 +196,18 @@ export function ClientTable<TData, TValue>({
             placeholder="Rechercher par nom..."
             className="max-w-sm h-10"
           />
+          <div className="flex items-center gap-4">
+            <CommercialDropDown
+              selectedCommerciaux={selectedCommerciaux}
+              setSelectedCommerciaux={setSelectedCommerciaux}
+              commerciaux={commerciaux.map(c => ({ ...c, id: c.id.toString() }))}
+            />
+            <VilleDropDown
+              selectedVilles={selectedVilles}
+              setSelectedVilles={setSelectedVilles}
+              villes={villes.map(v => ({ ...v, id: v.id.toString() }))}
+            />
+          </div>
         </div>
 
         <FilterArea
@@ -146,6 +215,12 @@ export function ClientTable<TData, TValue>({
           setSelectedStatuses={setSelectedStatuses}
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}
+          selectedCommerciaux={selectedCommerciaux}
+          setSelectedCommerciaux={setSelectedCommerciaux}
+          selectedVilles={selectedVilles}
+          setSelectedVilles={setSelectedVilles}
+          commerciaux={commerciaux}
+          villes={villes}
         />
       </div>
 
@@ -259,11 +334,23 @@ function FilterArea({
   setSelectedStatuses,
   selectedCategories,
   setSelectedCategories,
+  selectedCommerciaux,
+  setSelectedCommerciaux,
+  selectedVilles,
+  setSelectedVilles,
+  commerciaux,
+  villes,
 }: {
   selectedStatuses: string[];
   setSelectedStatuses: Dispatch<SetStateAction<string[]>>;
   selectedCategories: string[];
   setSelectedCategories: Dispatch<SetStateAction<string[]>>;
+  selectedCommerciaux: string[];
+  setSelectedCommerciaux: Dispatch<SetStateAction<string[]>>;
+  selectedVilles: string[];
+  setSelectedVilles: Dispatch<SetStateAction<string[]>>;
+  commerciaux: Commercial[];
+  villes: Ville[];
 }) {
   return (
     <div className="flex gap-3 poppins">
@@ -311,11 +398,63 @@ function FilterArea({
         </div>
       )}
 
-      {(selectedCategories.length > 0 || selectedStatuses.length > 0) && (
+      {selectedCommerciaux.length > 0 && (
+        <div className="border-dashed border rounded-sm p-1 flex gap-2 items-center px-2 text-sm">
+          <span className="text-gray-600">Commercial</span>
+          <Separator orientation="vertical" />
+          <div className="flex gap-2 items-center">
+            {selectedCommerciaux.length < 3 ? (
+              <>
+                {selectedCommerciaux.map((commercialId, index) => {
+                  const commercial = commerciaux.find(c => c.id.toString() === commercialId);
+                  return (
+                    <Badge key={index} variant={"secondary"}>
+                      {commercial?.commercial_code || commercialId}
+                    </Badge>
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                <Badge variant={"secondary"}>{selectedCommerciaux.length} Selected</Badge>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {selectedVilles.length > 0 && (
+        <div className="border-dashed border rounded-sm p-1 flex gap-2 items-center px-2 text-sm">
+          <span className="text-gray-600">Ville</span>
+          <Separator orientation="vertical" />
+          <div className="flex gap-2 items-center">
+            {selectedVilles.length < 3 ? (
+              <>
+                {selectedVilles.map((villeId, index) => {
+                  const ville = villes.find(v => v.id.toString() === villeId);
+                  return (
+                    <Badge key={index} variant={"secondary"}>
+                      {ville?.nameVille || villeId}
+                    </Badge>
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                <Badge variant={"secondary"}>{selectedVilles.length} Selected</Badge>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {(selectedCategories.length > 0 || selectedStatuses.length > 0 || selectedCommerciaux.length > 0 || selectedVilles.length > 0) && (
         <Button
           onClick={() => {
             setSelectedCategories([]);
             setSelectedStatuses([]);
+            setSelectedCommerciaux([]);
+            setSelectedVilles([]);
           }}
           variant={"ghost"}
           className="p-1 px-2"

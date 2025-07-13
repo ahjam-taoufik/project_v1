@@ -29,7 +29,19 @@ interface Secteur {
   nameSecteur: string;
 }
 
-export default function ClientDialog({ villes }: { villes: Ville[] }) {
+interface Commercial {
+  id: number;
+  commercial_code: string;
+  commercial_fullName: string;
+}
+
+export default function ClientDialog({
+  villes,
+  commerciaux = []
+}: {
+  villes: Ville[];
+  commerciaux?: Commercial[];
+}) {
   const [open, setOpen] = useState(false);
   const [secteurs, setSecteurs] = useState<Secteur[]>([]);
   const [loadingSecteurs, setLoadingSecteurs] = useState(false);
@@ -40,6 +52,10 @@ export default function ClientDialog({ villes }: { villes: Ville[] }) {
     fullName: "",
     idVille: "",
     idSecteur: "",
+    idCommercial: "",
+    remise_special: "",
+    pourcentage: "",
+    telephone: "",
   });
 
   // Charger les secteurs quand la ville change
@@ -73,7 +89,6 @@ export default function ClientDialog({ villes }: { villes: Ville[] }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     post(route('clients.store'), {
       onSuccess: () => {
         toast.success('Client créé avec succès!');
@@ -188,6 +203,82 @@ export default function ClientDialog({ villes }: { villes: Ville[] }) {
               </select>
               {errors.idSecteur && (
                 <p className="text-xs text-red-500">{errors.idSecteur}</p>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="commercial-select">Commercial</Label>
+              <select
+                id="commercial-select"
+                value={data.idCommercial}
+                onChange={(e) => setData('idCommercial', e.target.value)}
+                className="flex h-10 sm:h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                required
+              >
+                <option value="">
+                  Sélectionnez un commercial
+                </option>
+                {commerciaux.map((commercial) => (
+                  <option key={commercial.id} value={commercial.id.toString()}>
+                    {commercial.commercial_code} - {commercial.commercial_fullName}
+                  </option>
+                ))}
+              </select>
+              {errors.idCommercial && (
+                <p className="text-xs text-red-500">{errors.idCommercial}</p>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="remise_special">Remise Spéciale</Label>
+              <Input
+                id="remise_special"
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="Entrez la remise spéciale"
+                className="h-10 sm:h-11"
+                value={data.remise_special}
+                onChange={(e) => setData('remise_special', e.target.value)}
+                required
+              />
+              {errors.remise_special && (
+                <p className="text-xs text-red-500">{errors.remise_special}</p>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="pourcentage">Pourcentage</Label>
+              <Input
+                id="pourcentage"
+                type="number"
+                step="0.01"
+                min="0"
+                max="100"
+                placeholder="Entrez le pourcentage"
+                className="h-10 sm:h-11"
+                value={data.pourcentage}
+                onChange={(e) => setData('pourcentage', e.target.value)}
+                required
+              />
+              {errors.pourcentage && (
+                <p className="text-xs text-red-500">{errors.pourcentage}</p>
+              )}
+            </div>
+
+            <div className="space-y-1">
+              <Label htmlFor="telephone">Téléphone</Label>
+              <Input
+                id="telephone"
+                type="tel"
+                placeholder="Entrez le numéro de téléphone"
+                className="h-10 sm:h-11"
+                value={data.telephone}
+                onChange={(e) => setData('telephone', e.target.value)}
+                required
+              />
+              {errors.telephone && (
+                <p className="text-xs text-red-500">{errors.telephone}</p>
               )}
             </div>
           </div>

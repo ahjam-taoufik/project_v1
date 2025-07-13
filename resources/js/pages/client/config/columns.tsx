@@ -18,6 +18,10 @@ export type Client = {
   fullName: string;
   idVille: string;
   idSecteur: string;
+  idCommercial: string;
+  remise_special: number;
+  pourcentage: number;
+  telephone: string;
   created_at: Date;
   ville: {
     id: string;
@@ -26,6 +30,11 @@ export type Client = {
   secteur: {
     id: string;
     nameSecteur: string;
+  };
+  commercial: {
+    id: string;
+    commercial_code: string;
+    commercial_fullName: string;
   };
 };
 
@@ -76,17 +85,51 @@ export const columns: ColumnDef<Client>[] = [
     },
   },
   {
+    accessorKey: "telephone",
+    header: ({ column }) => <SortableHeader column={column} label="Téléphone" />,
+    cell: ({ row }) => {
+      return <div className="text-left">{row.getValue("telephone")}</div>
+    },
+  },
+  {
     accessorKey: "idVille",
     header: ({ column }) => <SortableHeader column={column} label="Ville" />,
     cell: ({ row }) => {
       return <div className="text-left">{row.original.ville?.nameVille || 'Inconnue'}</div>
     },
+    filterFn: "idMultiSelect",
   },
   {
     accessorKey: "idSecteur",
     header: ({ column }) => <SortableHeader column={column} label="Secteur" />,
     cell: ({ row }) => {
       return <div className="text-left">{row.original.secteur?.nameSecteur || 'Inconnu'}</div>
+    },
+  },
+  {
+    accessorKey: "idCommercial",
+    header: ({ column }) => <SortableHeader column={column} label="Commercial" />,
+    cell: ({ row }) => {
+      return <div className="text-left">{row.original.commercial?.commercial_code || 'Non assigné'}</div>
+    },
+    filterFn: "idMultiSelect",
+  },
+  {
+    accessorKey: "remise_special",
+    header: ({ column }) => <SortableHeader column={column} label="Remise Spéciale" />,
+    cell: ({ row }) => {
+      const value = row.getValue("remise_special");
+      const numValue = value ? parseFloat(value as string) : 0;
+      return <div className="text-right font-medium">{numValue.toFixed(2)}%</div>
+    },
+  },
+  {
+    accessorKey: "pourcentage",
+    header: ({ column }) => <SortableHeader column={column} label="Pourcentage" />,
+    cell: ({ row }) => {
+      const value = row.getValue("pourcentage");
+      const numValue = value ? parseFloat(value as string) : 0;
+      return <div className="text-right font-medium">{numValue.toFixed(2)}%</div>
     },
   },
   {

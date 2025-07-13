@@ -18,6 +18,18 @@ class ClientRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->idCommercial === '') {
+            $this->merge([
+                'idCommercial' => null,
+            ]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -36,7 +48,8 @@ class ClientRequest extends FormRequest
                 "required",
                 "string",
                 "min:3",
-                "max:100"
+                "max:100",
+                Rule::unique('clients')->ignore($this->route('client'))
             ],
             "idVille" => [
                 "required",
@@ -45,6 +58,28 @@ class ClientRequest extends FormRequest
             "idSecteur" => [
                 "required",
                 Rule::exists('secteurs', 'id')
+            ],
+            "idCommercial" => [
+                "required",
+                Rule::exists('commerciaux', 'id')
+            ],
+            "remise_special" => [
+                "required",
+                "numeric",
+                "min:0",
+                "max:100"
+            ],
+            "pourcentage" => [
+                "required",
+                "numeric",
+                "min:0",
+                "max:100"
+            ],
+            "telephone" => [
+                "required",
+                "string",
+                "min:10",
+                "max:20"
             ]
         ];
     }
@@ -59,10 +94,24 @@ class ClientRequest extends FormRequest
             "fullName.required" => "Le nom complet est obligatoire.",
             "fullName.min" => "Le nom complet doit contenir au moins 3 caractères.",
             "fullName.max" => "Le nom complet doit contenir au plus 100 caractères.",
+            "fullName.unique" => "Ce nom de client existe déjà.",
             "idVille.required" => "La ville est obligatoire.",
             "idVille.exists" => "La ville sélectionnée n'existe pas.",
             "idSecteur.required" => "Le secteur est obligatoire.",
-            "idSecteur.exists" => "Le secteur sélectionné n'existe pas."
+            "idSecteur.exists" => "Le secteur sélectionné n'existe pas.",
+            "idCommercial.exists" => "Le commercial sélectionné n'existe pas.",
+            "remise_special.required" => "La remise spéciale est obligatoire.",
+            "remise_special.numeric" => "La remise spéciale doit être un nombre.",
+            "remise_special.min" => "La remise spéciale doit être positive.",
+            "remise_special.max" => "La remise spéciale est trop élevée.",
+            "pourcentage.required" => "Le pourcentage est obligatoire.",
+            "pourcentage.numeric" => "Le pourcentage doit être un nombre.",
+            "pourcentage.min" => "Le pourcentage doit être positif.",
+            "pourcentage.max" => "Le pourcentage ne peut pas dépasser 100.",
+            "telephone.required" => "Le téléphone est obligatoire.",
+            "telephone.string" => "Le téléphone doit être une chaîne de caractères.",
+            "telephone.min" => "Le téléphone doit contenir au moins 10 caractères.",
+            "telephone.max" => "Le téléphone doit contenir au plus 20 caractères."
         ];
     }
 }

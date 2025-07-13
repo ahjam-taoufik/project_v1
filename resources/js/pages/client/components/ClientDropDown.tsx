@@ -67,13 +67,19 @@ export default function ClientDropDown({ row }: { row: Row<Client> }) {
   async function handleCopy() {
     if (confirm('Êtes-vous sûr de vouloir faire une copie de ce client ?')) {
       const originalCode = row.original.code;
+      const originalFullName = row.original.fullName;
       const copiedCode = `${originalCode}-Copy`;
+      const copiedFullName = `${originalFullName} - Copie`;
 
       router.post(route('clients.store'), {
         code: copiedCode,
-        fullName: row.original.fullName,
+        fullName: copiedFullName,
         idVille: row.original.idVille,
-        idSecteur: row.original.idSecteur
+        idSecteur: row.original.idSecteur,
+        idCommercial: row.original.idCommercial,
+        remise_special: row.original.remise_special,
+        pourcentage: row.original.pourcentage,
+        telephone: row.original.telephone,
       }, {
         onSuccess: () => {
           toast.success('Client copié avec succès');

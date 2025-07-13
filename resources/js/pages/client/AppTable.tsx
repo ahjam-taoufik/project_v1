@@ -12,7 +12,19 @@ type Ville = {
     nameVille: string;
 };
 
-export default function AppTable({ villes }: { villes: Ville[] }) {
+type Commercial = {
+    id: number;
+    commercial_code: string;
+    commercial_fullName: string;
+};
+
+export default function AppTable({
+    villes,
+    commerciaux = []
+}: {
+    villes: Ville[];
+    commerciaux?: Commercial[];
+}) {
     const { props: { clients } } = usePage();
     const clientsArray = clients as Client[];
 
@@ -41,14 +53,14 @@ export default function AppTable({ villes }: { villes: Ville[] }) {
                         </p>
                     </div>
                     <div className="w-full md:w-auto">
-                        <ClientDialog villes={villes} />
+                        <ClientDialog villes={villes} commerciaux={commerciaux} />
                     </div>
                 </div>
             </CardHeader>
 
             <CardContent className="p-1 sm:p-2 md:p-4 w-full overflow-x-auto">
                 <div className="min-w-[300px]">
-                    <ClientTable data={clients as Client[]} columns={columns} />
+                    <ClientTable data={clients as Client[]} columns={columns} commerciaux={commerciaux} villes={villes} />
                 </div>
             </CardContent>
         </Card>
