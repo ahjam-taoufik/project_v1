@@ -1,30 +1,23 @@
-"use client"
+"use client";
 import { usePage } from "@inertiajs/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import UserDialog from "./components/UserDialog";
-import { createColumns } from "./config/columns";
-import { UserTable } from "./components/UserTable";
-import type { User, Role } from "@/types";
+import BrandDialog from "./components/BrandDialog";
+import { columns } from "./config/columns";
+import { BrandTable } from "./components/BrandTable";
+import type { Brand } from "./config/columns";
 import { useEffect } from "react";
-import { usePermissions } from "@/hooks/use-permissions";
 
 export default function AppTable() {
-    const { props: { users, roles } } = usePage();
-    const { hasPermission } = usePermissions();
-    const usersArray = users as User[];
-    const rolesArray = roles as Role[];
-
-    // Générer les colonnes avec les rôles
-    const columns = createColumns(rolesArray);
+    const { props: { brands } } = usePage();
+    const brandsArray = brands as Brand[];
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.altKey && e.key === 'a') {
                 e.preventDefault();
-                document.getElementById('add-user-button')?.click();
+                document.getElementById('add-brand-button')?.click();
             }
         };
-
         window.addEventListener('keydown', handleKeyDown);
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
@@ -36,22 +29,19 @@ export default function AppTable() {
             <CardHeader className="flex justify-between p-2 md:p-4">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full gap-4">
                     <div>
-                        <CardTitle className="font-bold text-lg sm:text-xl md:text-2xl">Utilisateurs</CardTitle>
+                        <CardTitle className="font-bold text-lg sm:text-xl md:text-2xl">Marques</CardTitle>
                         <p className="text-muted-foreground text-sm md:text-base">
-                            {usersArray.length} {usersArray.length > 1 ? "Utilisateurs" : "Utilisateur"}
+                            {brandsArray.length} {brandsArray.length > 1 ? "Marques" : "Marque"}
                         </p>
                     </div>
                     <div className="w-full md:w-auto">
-                        {hasPermission('users.create') && (
-                            <UserDialog roles={rolesArray} />
-                        )}
+                        <BrandDialog />
                     </div>
                 </div>
             </CardHeader>
-
             <CardContent className="p-1 sm:p-2 md:p-4 w-full overflow-x-auto">
                 <div className="min-w-[300px]">
-                    <UserTable data={users as User[]} columns={columns} />
+                    <BrandTable data={brands as Brand[]} columns={columns} />
                 </div>
             </CardContent>
         </Card>

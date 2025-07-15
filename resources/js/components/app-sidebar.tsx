@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type MainNavItem, NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import {  LayoutGrid, LayoutPanelTop, MapPinCheckInside, Notebook, UserRoundPlus, Users, Users2 } from 'lucide-react';
+import {  LayoutGrid, LayoutPanelTop, MapPinCheckInside, Notebook, UserRoundPlus, Users, Users2, FolderTree, Package, Package2 } from 'lucide-react';
 import AppLogo from './app-logo';
 import { NavMainSimple } from '@/components/nav-main2';
 import { usePermissions } from '@/hooks/use-permissions';
@@ -65,6 +65,27 @@ export function AppSidebar() {
                     title: 'Villes',
                     href: '/villes',
                     icon: MapPinCheckInside,
+                }] : []),
+            ]
+        }] : []),
+        ...(hasPermission('brands.view') || hasPermission('categories.view') || hasPermission('products.view') ? [{
+            title: 'Manage Product',
+            icon: Package,
+            subItems: [
+                ...(hasPermission('brands.view') ? [{
+                    title: 'Brands',
+                    href: '/brands',
+                    icon: Notebook,
+                }] : []),
+                ...(hasPermission('categories.view') ? [{
+                    title: 'Catégories',
+                    href: '/categories',
+                    icon: FolderTree,
+                }] : []),
+                ...(hasPermission('products.view') ? [{
+                    title: 'Produits',
+                    href: '/products',
+                    icon: Package2,
                 }] : []),
             ]
         }] : []),

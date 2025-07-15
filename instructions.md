@@ -1,6 +1,6 @@
 
 # Système de Gestion d'Inventaire - Laravel 12 + Inertia + React
-
+vous êtes un expert en développement (laravel 12 full stack inertia et React intégrer)
 ## Vue d'ensemble du projet
 Application de gestion d'inventaire construite avec Laravel 12, utilisant Inertia.js pour l'intégration frontend et React avec TypeScript pour l'interface utilisateur.
 

@@ -19,6 +19,8 @@ class UserController extends Controller
      */
     public function index(): Response
     {
+        abort_unless(auth()->user()->can('users.view'), 403);
+
         $users = User::with('roles')->latest()->get();
         $roles = Role::orderBy('name')->get();
 
@@ -41,6 +43,8 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
+        abort_unless(auth()->user()->can('users.create'), 403);
+
         try {
             $validated = $request->validated();
 
@@ -67,6 +71,9 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
+        abort_unless(auth()->user()->can('users.view'), 403);
+
+        // Implementation can be added here if needed
         //
     }
 
@@ -75,6 +82,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        abort_unless(auth()->user()->can('users.edit'), 403);
+
+        // Implementation can be added here if needed
         //
     }
 
@@ -83,6 +93,8 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
+        abort_unless(auth()->user()->can('users.edit'), 403);
+
         try {
             $validated = $request->validated();
 
@@ -120,6 +132,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        abort_unless(auth()->user()->can('users.delete'), 403);
+
         try {
             if ($user) {
                 $user->delete();

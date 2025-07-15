@@ -101,3 +101,42 @@ export interface Client {
     nameSecteur: string;
   };
 }
+
+export interface Brand {
+  id: number;
+  brand_name: string;
+  created_at: string;
+  updated_at: string;
+  categories?: Category[];
+  products?: Product[];
+}
+
+export interface Category {
+  id: number;
+  category_name: string;
+  brand_id: number;
+  created_at: string;
+  updated_at: string;
+  brand?: Brand;
+  products?: Product[];
+}
+
+export interface Product {
+  id: number;
+  product_Ref: string;
+  product_libelle: string;
+  prix_achat_colis: number;
+  prix_achat_unite: number;
+  prix_vente_colis: number;
+  prix_vente_unite: number;
+  brand_id: number;
+  category_id: number;
+  product_Poids: number;
+  nombre_unite_par_colis: number;
+  product_isActive: boolean;
+  observation?: string | null;
+  created_at: string;
+  updated_at: string;
+  brand?: Brand;
+  category?: Category;
+}

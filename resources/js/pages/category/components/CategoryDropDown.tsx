@@ -1,13 +1,7 @@
 "use client";
-
 import React, { useState } from "react";
-import { Row } from "@tanstack/react-table";
-import { User, Role } from "@/types";
-import { usePermissions } from "@/hooks/use-permissions";
-
 import { FaRegEdit } from "react-icons/fa";
-import { MdOutlineDelete } from "react-icons/md";
-
+import { MdContentCopy, MdOutlineDelete } from "react-icons/md";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,12 +9,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import { useForm } from "@inertiajs/react";
+import { useForm, router } from "@inertiajs/react";
 import toast from "react-hot-toast";
-import UserEditDialog from "@/pages/user/components/UserEditDialog";
+import CategoryEditDialog from "./CategoryEditDialog";
+import { usePermissions } from '@/hooks/use-permissions';
+import type { Category } from '@/types';
 
 type MenuItem =
   | {
@@ -37,35 +32,45 @@ type MenuItem =
       className?: undefined;
     };
 
-interface UserDropDownProps {
-  row: Row<User>;
-  roles: Role[];
-}
-
-export default function UserDropDown({ row, roles }: UserDropDownProps) {
+export default function CategoryDropDown({ category }: { category: Category }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { delete: destroy } = useForm();
-  const { hasPermission } = usePermissions();
+  const { can } = usePermissions();
 
   function handleEdit() {
-    // Fermer le dropdown avant d'ouvrir le dialog
+    // Ouvrir le dialog immédiatement sans délai
+    setIsEditDialogOpen(true);
     setIsDropdownOpen(false);
-
-    // Petit délai pour permettre au dropdown de se fermer complètement
-    setTimeout(() => {
-      setIsEditDialogOpen(true);
-    }, 100);
   }
 
   async function handleDelete() {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
-      destroy(route('users.destroy', { user: row.original.id }), {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')) {
+      destroy(route('categories.destroy', { category: category.id }), {
         onSuccess: () => {
-          toast.success('Utilisateur supprimé avec succès');
+          toast.success('Catégorie supprimée avec succès');
         },
         onError: () => {
-          toast.error('Erreur lors de la suppression de l\'utilisateur');
+          toast.error('Erreur lors de la suppression de la catégorie');
+        },
+        preserveScroll: true,
+      });
+    }
+  }
+
+  async function handleCopy() {
+    if (confirm('Êtes-vous sûr de vouloir faire une copie de cette catégorie ?')) {
+      const originalName = category.category_name;
+      const copiedName = `${originalName} - Copy`;
+      router.post(route('categories.store'), {
+        category_name: copiedName,
+        brand_id: category.brand_id
+      }, {
+        onSuccess: () => {
+          toast.success('Catégorie copiée avec succès');
+        },
+        onError: () => {
+          toast.error('Erreur lors de la copie de la catégorie');
         },
         preserveScroll: true,
       });
@@ -79,20 +84,25 @@ export default function UserDropDown({ row, roles }: UserDropDownProps) {
         handleDelete();
       }, 100);
     }
-
+    if (item.label === "Copy") {
+      setIsDropdownOpen(false);
+      setTimeout(() => {
+        handleCopy();
+      }, 100);
+    }
     if (item.label === "Edit") {
       handleEdit();
     }
   }
 
   const menuItems: MenuItem[] = [
-    ...(hasPermission('users.edit') ? [{ icon: <FaRegEdit />, label: "Edit", className: "" }] : []),
-    ...(hasPermission('users.edit') && hasPermission('users.delete') ? [{ separator: true } as const] : []),
-    ...(hasPermission('users.delete') ? [{ icon: <MdOutlineDelete className="text-lg" />, label: "Delete", className: "text-red-600" }] : [])
+    ...(can('categories.create') ? [{ icon: <MdContentCopy />, label: "Copy", className: "" }] : []),
+    ...(can('categories.edit') ? [{ icon: <FaRegEdit />, label: "Edit", className: "" }] : []),
+    ...(((can('categories.create') || can('categories.edit')) && can('categories.delete')) ? [{ separator: true } as const] : []),
+    ...(can('categories.delete') ? [{ icon: <MdOutlineDelete className="text-lg" />, label: "Delete", className: "text-red-600" }] : [])
   ];
 
-  // Ne pas afficher le dropdown si l'utilisateur n'a aucune permission
-  if (!hasPermission('users.edit') && !hasPermission('users.delete')) {
+  if (menuItems.length === 0) {
     return null;
   }
 
@@ -112,11 +122,14 @@ export default function UserDropDown({ row, roles }: UserDropDownProps) {
               <DropdownMenuItem
                 key={index}
                 className={`flex items-center gap-1 p-[10px] ${item.className}`}
-                onClick={() => handleClickedItem(item)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleClickedItem(item);
+                }}
                 onSelect={(e) => {
-                  // Empêcher la fermeture automatique pour Edit
                   if (item.label === "Edit") {
                     e.preventDefault();
+                    e.stopPropagation();
                   }
                 }}
               >
@@ -127,13 +140,10 @@ export default function UserDropDown({ row, roles }: UserDropDownProps) {
           )}
         </DropdownMenuContent>
       </DropdownMenu>
-
-      {/* Dialog d'édition séparé */}
-      <UserEditDialog
+      <CategoryEditDialog
         isOpen={isEditDialogOpen}
         onOpenChange={setIsEditDialogOpen}
-        user={row.original}
-        roles={roles}
+        category={category}
       />
     </div>
   );

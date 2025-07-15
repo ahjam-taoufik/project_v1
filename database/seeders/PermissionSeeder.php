@@ -58,6 +58,21 @@ class PermissionSeeder extends Seeder
                             'villes.create',
                             'villes.edit',
                             'villes.delete',
+                            // Permissions Brands
+                            'brands.view',
+                            'brands.create',
+                            'brands.edit',
+                            'brands.delete',
+                            // Permissions Categories
+                            'categories.view',
+                            'categories.create',
+                            'categories.edit',
+                            'categories.delete',
+                            // Permissions Products
+                            'products.view',
+                            'products.create',
+                            'products.edit',
+                            'products.delete',
 
         ];
 

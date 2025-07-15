@@ -15,45 +15,56 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Créer d'abord les permissions
+        // 1. Créer d'abord TOUTES les permissions via les seeders
         $this->call([
             PermissionSeeder::class,
-        ]);
-
-        // Créer le rôle Super Admin
-        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin']);
-
-        // Assigner toutes les permissions au rôle Super Admin
-        $allPermissions = Permission::all();
-        $superAdminRole->syncPermissions($allPermissions);
-
-        // Créer l'utilisateur Super Admin
-        $superAdmin = User::firstOrCreate(
-            ['email' => 'superadmin@admin.com'],
-            [
-                'name' => 'Super Administrateur',
-                'password' => bcrypt('password'),
-            ]
-        );
-
-        // Assigner le rôle Super Admin à l'utilisateur
-        $superAdmin->assignRole($superAdminRole);
-
-        // Créer un utilisateur admin normal
-        $adminUser = User::firstOrCreate(
-            ['email' => 'admin@admin.com'],
-            [
-                'name' => 'Administrateur',
-                'password' => bcrypt('password'),
-            ]
-        );
-
-        // La méthode call() prend un tableau de classes de Seeder à exécuter.
-        $this->call([
             VilleSeeder::class,
             SecteurSeeder::class,
             CommercialSeeder::class,
             ClientSeeder::class,
+            BrandSeeder::class,
+            CategorySeeder::class,
+            ProductSeeder::class,
         ]);
+
+        // 2. Maintenant créer le rôle Super Admin avec TOUTES les permissions
+        $superAdminRole = Role::firstOrCreate(['name' => 'Super Admin']);
+
+        // 3. Assigner toutes les permissions au rôle Super Admin
+        $allPermissions = Permission::all();
+        $superAdminRole->syncPermissions($allPermissions);
+
+        // 4. Créer le super utilisateur
+        $superUser = User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => bcrypt('password'),
+            ]
+        );
+
+        // 5. Assigner le rôle Super Admin à l'utilisateur
+        $superUser->assignRole($superAdminRole);
+
+        // 6. Créer d'autres utilisateurs de test
+        $users = [
+            [
+                'name' => 'John Doe',
+                'email' => 'john@example.com',
+                'password' => bcrypt('password'),
+            ],
+            [
+                'name' => 'Jane Smith',
+                'email' => 'jane@example.com',
+                'password' => bcrypt('password'),
+            ],
+        ];
+
+        foreach ($users as $userData) {
+            User::firstOrCreate(
+                ['email' => $userData['email']],
+                $userData
+            );
+        }
     }
 }
