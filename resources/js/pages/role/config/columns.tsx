@@ -79,7 +79,8 @@ export const columns: ColumnDef<Role>[] = [
     },
   },
   {
-    accessorKey: "permissions",
+    accessorFn: (row) => row.permissions ?? [],
+    id: "permissions",
     header: ({ column }) => (<div className="text-center"><SortableHeader column={column} label="Permissions" /></div>),
     cell: ({ row }) => {
       const permissions = row.getValue("permissions") as Array<{

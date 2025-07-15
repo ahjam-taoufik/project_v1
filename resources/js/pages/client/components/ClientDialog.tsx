@@ -275,7 +275,6 @@ export default function ClientDialog({
                 className="h-10 sm:h-11"
                 value={data.telephone}
                 onChange={(e) => setData('telephone', e.target.value)}
-                required
               />
               {errors.telephone && (
                 <p className="text-xs text-red-500">{errors.telephone}</p>

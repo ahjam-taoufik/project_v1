@@ -68,8 +68,9 @@ export const createColumns = (roles: Role[]): ColumnDef<User>[] => [
     },
   },
   {
-    accessorKey: "roles",
-    header: "Rôles",
+    accessorFn: (row) => row.roles?.length || 0,
+    id: "roles",
+    header: ({ column }) => <SortableHeader column={column} label="Rôles" />,
     cell: ({ row }) => {
       const userRoles = row.original.roles;
       return (

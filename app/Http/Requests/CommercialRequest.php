@@ -41,7 +41,7 @@ class CommercialRequest extends FormRequest
             "commercial_telephone" => [
                 "required",
                 "string",
-                "regex:/^0[67][0-9]{8}$/",
+                "regex:/^0[671][0-9]{8}$/",
                 Rule::unique('commerciaux')->ignore($this->route('commercial'))
             ]
         ];
@@ -54,11 +54,11 @@ class CommercialRequest extends FormRequest
             "commercial_code.min" => "Le code doit contenir au moins 3 caractères.",
             "commercial_code.max" => "Le code doit contenir au plus 20 caractères.",
             "commercial_code.unique" => "Ce code commercial existe déjà.",
-            
+
             "commercial_fullName.required" => "Le nom complet est obligatoire.",
             "commercial_fullName.min" => "Le nom doit contenir au moins 3 caractères.",
             "commercial_fullName.max" => "Le nom doit contenir au plus 100 caractères.",
-            
+
             "commercial_telephone.required" => "Le numéro de téléphone est obligatoire.",
             "commercial_telephone.regex" => "Le numéro de téléphone doit être au format marocain (06/07xxxxxxxx).",
             "commercial_telephone.unique" => "Ce numéro de téléphone existe déjà."

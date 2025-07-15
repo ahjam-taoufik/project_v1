@@ -303,7 +303,6 @@ export default function ClientEditDialog({
                 value={data.telephone}
                 onChange={(e) => setData('telephone', e.target.value)}
                 className="col-span-3"
-                required
               />
             </div>
             {errors.telephone && (

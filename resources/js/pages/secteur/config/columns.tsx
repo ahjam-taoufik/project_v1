@@ -72,7 +72,8 @@ export const columns: ColumnDef<Secteur>[] = [
 
 },
   {
-    accessorKey: "idVille",
+    accessorFn: (row) => row.ville?.nameVille || 'Inconnue',
+    id: "ville",
     header: ({ column }) => <SortableHeader column={column} label="Ville" />,
     cell: ({ row }) => {
       return <div className="text-left">{row.original.ville?.nameVille || 'Inconnue'}</div>

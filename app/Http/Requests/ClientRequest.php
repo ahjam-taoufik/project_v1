@@ -76,7 +76,7 @@ class ClientRequest extends FormRequest
                 "max:100"
             ],
             "telephone" => [
-                "required",
+                "nullable",
                 "string",
                 "min:10",
                 "max:20"
@@ -108,7 +108,6 @@ class ClientRequest extends FormRequest
             "pourcentage.numeric" => "Le pourcentage doit être un nombre.",
             "pourcentage.min" => "Le pourcentage doit être positif.",
             "pourcentage.max" => "Le pourcentage ne peut pas dépasser 100.",
-            "telephone.required" => "Le téléphone est obligatoire.",
             "telephone.string" => "Le téléphone doit être une chaîne de caractères.",
             "telephone.min" => "Le téléphone doit contenir au moins 10 caractères.",
             "telephone.max" => "Le téléphone doit contenir au plus 20 caractères."

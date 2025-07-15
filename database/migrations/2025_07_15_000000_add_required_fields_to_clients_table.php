@@ -15,7 +15,7 @@ return new class extends Migration
             // Ajouter les nouveaux champs avec des valeurs par défaut temporaires
             $table->decimal('remise_special', 10, 2)->default(0)->after('idCommercial');
             $table->decimal('pourcentage', 5, 2)->default(0)->after('remise_special');
-            $table->string('telephone', 20)->default('')->after('pourcentage');
+            $table->string('telephone', 20)->nullable()->after('pourcentage');
         });
     }
 

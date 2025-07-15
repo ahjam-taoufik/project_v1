@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 
 class PermissionSeeder extends Seeder
@@ -13,6 +14,14 @@ class PermissionSeeder extends Seeder
      */
     public function run(): void
     {
+          // ⚠️ Désactiver les clés étrangères pour éviter les conflits
+          DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+          // 🧹 Vider la table (remise à zéro)
+          Permission::truncate();
+
+          // ✅ Réactiver les clés étrangères
+          DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $permissions = [
                             // Permissions Utilisateurs
                             'users.view',

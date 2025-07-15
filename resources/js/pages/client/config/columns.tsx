@@ -93,6 +93,7 @@ export const columns: ColumnDef<Client>[] = [
   },
   {
     accessorKey: "idVille",
+    id: "idVille",
     header: ({ column }) => <SortableHeader column={column} label="Ville" />,
     cell: ({ row }) => {
       return <div className="text-left">{row.original.ville?.nameVille || 'Inconnue'}</div>
@@ -100,7 +101,8 @@ export const columns: ColumnDef<Client>[] = [
     filterFn: "idMultiSelect",
   },
   {
-    accessorKey: "idSecteur",
+    accessorFn: (row) => row.secteur?.nameSecteur || 'Inconnu',
+    id: "secteur",
     header: ({ column }) => <SortableHeader column={column} label="Secteur" />,
     cell: ({ row }) => {
       return <div className="text-left">{row.original.secteur?.nameSecteur || 'Inconnu'}</div>
@@ -108,6 +110,7 @@ export const columns: ColumnDef<Client>[] = [
   },
   {
     accessorKey: "idCommercial",
+    id: "idCommercial",
     header: ({ column }) => <SortableHeader column={column} label="Commercial" />,
     cell: ({ row }) => {
       return <div className="text-left">{row.original.commercial?.commercial_code || 'Non assigné'}</div>

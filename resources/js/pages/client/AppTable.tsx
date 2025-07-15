@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ClientDialog from "./components/ClientDialog";
 import { columns } from "./config/columns";
 import { ClientTable } from "./components/ClientTable";
+import { PrintButtons } from "./components/print";
 import type { Client } from "./config/columns";
 import { useEffect } from "react";
 
@@ -52,7 +53,8 @@ export default function AppTable({
                             {clientsArray.length} {clientsArray.length > 1 ? "Clients" : "Client"}
                         </p>
                     </div>
-                    <div className="w-full md:w-auto">
+                    <div className="w-full md:w-auto flex flex-col sm:flex-row gap-2">
+                        <PrintButtons clients={clientsArray} commerciaux={commerciaux} />
                         <ClientDialog villes={villes} commerciaux={commerciaux} />
                     </div>
                 </div>

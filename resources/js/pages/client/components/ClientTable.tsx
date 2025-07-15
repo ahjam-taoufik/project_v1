@@ -80,21 +80,14 @@ const idMultiSelectFilter: FilterFn<unknown> = (
   columnId,
   filterValue: string[]
 ) => {
-  const rowValue = row.getValue(columnId) as string;
-  // Convertir aussi le rowValue en string pour s'assurer de la cohérence
+  if (filterValue.length === 0) return true;
+
+  const rowValue = row.getValue(columnId);
+  // Convertir en string pour une comparaison cohérente
   const rowValueStr = String(rowValue);
   const filterValueStr = filterValue.map(val => String(val));
 
-  console.log('Filter Debug:', {
-    columnId,
-    rowValue,
-    rowValueStr,
-    filterValue,
-    filterValueStr,
-    match: filterValueStr.includes(rowValueStr)
-  });
-
-  return filterValue.length === 0 || filterValueStr.includes(rowValueStr);
+  return filterValueStr.includes(rowValueStr);
 };
 
 export function ClientTable<TData, TValue>({
