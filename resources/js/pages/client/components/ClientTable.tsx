@@ -62,6 +62,7 @@ declare module "@tanstack/table-core" {
   interface FilterFns {
     multiSelect: FilterFn<unknown>;
     idMultiSelect: FilterFn<unknown>;
+    globalSearch: FilterFn<unknown>;
   }
 }
 
@@ -156,6 +157,17 @@ export function ClientTable<TData, TValue>({
     ]);
   }, [selectedStatuses, selectedCategories, selectedCommerciaux, selectedVilles]);
 
+      // Fonction de filtrage personnalisée pour rechercher dans le nom et le code
+  const globalFilterFn: FilterFn<unknown> = (row, columnId, filterValue: string) => {
+    if (!filterValue) return true;
+
+    const searchValue = filterValue.toLowerCase();
+    const fullName = String(row.getValue("fullName") || "").toLowerCase();
+    const code = String(row.getValue("code") || "").toLowerCase();
+
+    return fullName.includes(searchValue) || code.includes(searchValue);
+  };
+
   const table = useReactTable({
     data,
     columns,
@@ -167,6 +179,7 @@ export function ClientTable<TData, TValue>({
     filterFns: {
       multiSelect: multiSelectFilter,
       idMultiSelect: idMultiSelectFilter,
+      globalSearch: globalFilterFn,
     },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -183,10 +196,12 @@ export function ClientTable<TData, TValue>({
         <div className="flex items-center justify-between">
           <Input
             value={(table.getColumn("fullName")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("fullName")?.setFilterValue(event.target.value)
-            }
-            placeholder="Rechercher par nom..."
+            onChange={(event) => {
+              const value = event.target.value;
+              // Appliquer le filtre sur la colonne fullName qui utilise globalSearch
+              table.getColumn("fullName")?.setFilterValue(value);
+            }}
+            placeholder="Rechercher par nom ou code..."
             className="max-w-sm h-10"
           />
           <div className="flex items-center gap-4">

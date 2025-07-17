@@ -11,10 +11,7 @@ import { usePermissions } from '@/hooks/use-permissions';
 
 export function AppSidebar() {
     const { hasPermission } = usePermissions();
-    console.log('hasPermission users.view:', hasPermission('users.view'));
-    console.log('hasPermission roles.view:', hasPermission('roles.view'));
-    console.log('hasPermission villes.view:', hasPermission('villes.view'));
-    console.log('hasPermission commerciaux.view:', hasPermission('commerciaux.view'));
+ 
 
     // Navigation simple avec permissions
     const mainNavItemsSimple: NavItem[] = [

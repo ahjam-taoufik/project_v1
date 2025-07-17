@@ -76,6 +76,7 @@ export const columns: ColumnDef<Client>[] = [
     cell: ({ row }) => {
       return <div className="text-left font-medium">{row.getValue("code")}</div>
     },
+    filterFn: "globalSearch",
   },
   {
     accessorKey: "fullName",
@@ -83,6 +84,7 @@ export const columns: ColumnDef<Client>[] = [
     cell: ({ row }) => {
       return <div className="text-left">{row.getValue("fullName")}</div>
     },
+    filterFn: "globalSearch",
   },
   {
     accessorKey: "telephone",

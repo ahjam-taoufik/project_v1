@@ -4,6 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+
 import { IoClose } from "react-icons/io5";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
@@ -35,10 +36,16 @@ import { Dispatch, SetStateAction, useEffect, useState , } from "react";
 import PaginationSelection from "@/pages/secteur/components/PaginationSelection";
 import { Badge } from "@/components/ui/badge";
 
+type Ville = {
+    id: number;
+    nameVille: string;
+};
+
 // import { usePage } from "@inertiajs/react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  villes?: Ville[];
 }
 
 export interface PaginationType {
@@ -69,6 +76,7 @@ const multiSelectFilter: FilterFn<unknown> = (
 export function SecteurTable<TData, TValue>({
   columns,
   data,
+  villes,
 }: DataTableProps<TData, TValue>) {
 
 
@@ -88,7 +96,7 @@ export function SecteurTable<TData, TValue>({
 
   useEffect(() => {
     setColumnFilters((prev) => {
-      // Remove both status and category filters
+      // Remove status and category filters
       const baseFilters = prev.filter(
         (filter) => filter.id !== "status" && filter.id !== "category"
       );
@@ -151,15 +159,25 @@ export function SecteurTable<TData, TValue>({
   return (
     <div className="poppins">
       <div className="flex flex-col gap-3 mb-8 mt-6 ">
-        <div className="flex items-center justify-between ">
-          <Input
-            value={(table.getColumn("nameSecteur")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("nameSecteur")?.setFilterValue(event.target.value)
-            }
-            placeholder="Search by name..."
-            className="max-w-sm h-10"
-          />
+        <div className="flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex gap-4 flex-wrap">
+            <Input
+              value={(table.getColumn("nameSecteur")?.getFilterValue() as string) ?? ""}
+              onChange={(event) =>
+                table.getColumn("nameSecteur")?.setFilterValue(event.target.value)
+              }
+              placeholder="Search by name..."
+              className="max-w-sm h-10"
+            />
+            <Input
+              value={(table.getColumn("ville")?.getFilterValue() as string) ?? ""}
+              onChange={(event) =>
+                table.getColumn("ville")?.setFilterValue(event.target.value)
+              }
+              placeholder="Search by ville..."
+              className="max-w-sm h-10"
+            />
+          </div>
         </div>
 
         {/* filter area */}
@@ -231,8 +249,8 @@ export function SecteurTable<TData, TValue>({
 
         <div className="flex gap-6 items-center">
            <span className="text-sm  text-gray-500 hidden sm:block">
-            {pagination.pageSize === 999999 ? 
-              `Showing all ${data.length} results` : 
+            {pagination.pageSize === 999999 ?
+              `Showing all ${data.length} results` :
               `Page ${pagination.pageIndex + 1} of ${table.getPageCount()}`
             }
            </span>

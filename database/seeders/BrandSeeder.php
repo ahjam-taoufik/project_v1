@@ -23,11 +23,28 @@ class BrandSeeder extends Seeder
          // ✅ Réactiver les clés étrangères
          DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         $brands = [
-            'Apple',
-            'Samsung',
-            'Sony',
-            'LG',
-            'Dell',
+            'ZEN',
+            'MIO',
+            'FIX',
+            'VITA FRESH',
+            'VERDE',
+            'TEOS',
+            'SHARK',
+            'PENA',
+            'PAPILLON',
+            'BAYETAS',
+            'MASQUE',
+            'MALA',
+            'LOUX',
+            'LIMPOS',
+            'QZI',
+            'KAND',
+            'IRIS',
+            'HAND',
+            'CLAIRE\'S',
+            'BLANDOUX',
+            'BANO',
+            'A+',
         ];
 
         foreach ($brands as $brandName) {

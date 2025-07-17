@@ -69,7 +69,8 @@ export const columns: ColumnDef<Secteur>[] = [
     cell: ({ row }) => {
       return <div className="text-left">{row.getValue("nameSecteur")}</div>
     },
-
+    enableColumnFilter: true,
+    filterFn: "includesString",
 },
   {
     accessorFn: (row) => row.ville?.nameVille || 'Inconnue',
@@ -78,7 +79,8 @@ export const columns: ColumnDef<Secteur>[] = [
     cell: ({ row }) => {
       return <div className="text-left">{row.original.ville?.nameVille || 'Inconnue'}</div>
     },
-
+    enableColumnFilter: true,
+    filterFn: "includesString",
 },
  {
     accessorKey: "created_at",

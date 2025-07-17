@@ -51,7 +51,7 @@ export default function AppTable({ villes }: { villes: Ville[] }) {
 
             <CardContent className="p-1 sm:p-2 md:p-4 w-full overflow-x-auto">
                 <div className="min-w-[300px]">
-                    <SecteurTable data={secteurs as Secteur[]} columns={columns} />
+                    <SecteurTable data={secteurs as Secteur[]} columns={columns} villes={villes} />
                 </div>
             </CardContent>
         </Card>

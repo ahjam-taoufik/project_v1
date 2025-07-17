@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
 
         // 4. Créer le super utilisateur
         $superUser = User::firstOrCreate(
-            ['email' => 'admin@example.com'],
+            ['email' => 'superadmin@admin.com'],
             [
                 'name' => 'Super Admin',
                 'password' => bcrypt('password'),
@@ -47,24 +47,24 @@ class DatabaseSeeder extends Seeder
         $superUser->assignRole($superAdminRole);
 
         // 6. Créer d'autres utilisateurs de test
-        $users = [
-            [
-                'name' => 'John Doe',
-                'email' => 'john@example.com',
-                'password' => bcrypt('password'),
-            ],
-            [
-                'name' => 'Jane Smith',
-                'email' => 'jane@example.com',
-                'password' => bcrypt('password'),
-            ],
-        ];
+        // $users = [
+        //     [
+        //         'name' => 'John Doe',
+        //         'email' => 'john@example.com',
+        //         'password' => bcrypt('password'),
+        //     ],
+        //     [
+        //         'name' => 'Jane Smith',
+        //         'email' => 'jane@example.com',
+        //         'password' => bcrypt('password'),
+        //     ],
+        // ];
 
-        foreach ($users as $userData) {
-            User::firstOrCreate(
-                ['email' => $userData['email']],
-                $userData
-            );
-        }
+        // foreach ($users as $userData) {
+        //     User::firstOrCreate(
+        //         ['email' => $userData['email']],
+        //         $userData
+        //     );
+        // }
     }
 }
