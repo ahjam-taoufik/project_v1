@@ -167,3 +167,24 @@
 [data-slot="select-content"] {
     isolation: isolate;
 }
+
+/* Animation Collapsible Radix UI */
+[data-slot="collapsible-content"] {
+  overflow: hidden;
+}
+[data-slot="collapsible-content"][data-state="open"] {
+  animation: slideDown 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  height: var(--radix-collapsible-content-height);
+}
+[data-slot="collapsible-content"][data-state="closed"] {
+  animation: slideUp 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 0;
+}
+@keyframes slideDown {
+  from { height: 0; }
+  to { height: var(--radix-collapsible-content-height); }
+}
+@keyframes slideUp {
+  from { height: var(--radix-collapsible-content-height); }
+  to { height: 0; }
+}

@@ -18,14 +18,18 @@ function CollapsibleTrigger({
 }
 
 function CollapsibleContent({
+  className = "",
   ...props
-}: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>) {
+}: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent> & { className?: string }) {
   return (
     <CollapsiblePrimitive.CollapsibleContent
       data-slot="collapsible-content"
+      className={`overflow-hidden ${className}`}
       {...props}
     />
-  )
+  );
 }
 
 export { Collapsible, CollapsibleTrigger, CollapsibleContent }
+
+// Je retire le bloc d'export default CollapsibleWithAnimation car le style global doit être appliqué dans le layout global ou _app.tsx, pas ici.

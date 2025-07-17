@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiFirstPage, BiLastPage } from "react-icons/bi";
 import {
@@ -26,6 +25,7 @@ import {
 import { useEffect, useState } from "react";
 import PaginationSelection from "@/pages/product/components/PaginationSelection";
 import type { Product } from "@/types";
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,13 +37,14 @@ export interface PaginationType {
   pageSize: number;
 }
 
-export function ProductTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function ProductTable<TData extends Product, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = useState<PaginationType>({
     pageIndex: 0,
     pageSize: 8,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [openProductId, setOpenProductId] = useState<number | null>(null);
 
   useEffect(() => {
     setSorting([
@@ -61,6 +62,11 @@ export function ProductTable<TData, TValue>({ columns, data }: DataTableProps<TD
       pagination,
       columnFilters,
       sorting,
+    },
+    filterFns: {
+      multiSelect: () => true,
+      idMultiSelect: () => true,
+      globalSearch: () => true,
     },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -110,29 +116,72 @@ export function ProductTable<TData, TValue>({ columns, data }: DataTableProps<TD
                         )}
                   </TableHead>
                 ))}
+                <TableHead>Actions</TableHead>
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+              table.getRowModel().rows.map((row) => {
+                const product = row.original as Product;
+                return (
+                  <>
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                      <TableCell>
+                        <button
+                          className="text-blue-600 underline text-sm"
+                          onClick={() => setOpenProductId(openProductId === product.id ? null : product.id)}
+                        >
+                          {openProductId === product.id ? "Voir moins" : "Voir plus"}
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                    <AnimatePresence initial={false}>
+                      {openProductId === product.id && (
+                        <TableRow key={`details-${product.id}`}>
+                          <TableCell colSpan={columns.length + 1} className="bg-gray-50 p-0">
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                              style={{ overflow: 'hidden' }}
+                            >
+                              <div className="p-4 text-sm grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <div><span className="font-semibold">Référence :</span> {product.product_Ref}</div>
+                                <div><span className="font-semibold">Libellé :</span> {product.product_libelle}</div>
+                                <div><span className="font-semibold">Prix achat colis :</span> {product.prix_achat_colis} </div>
+                                <div><span className="font-semibold">Prix achat unité :</span> {product.prix_achat_unite} </div>
+                                <div><span className="font-semibold">Prix vente colis :</span> {product.prix_vente_colis} </div>
+                                <div><span className="font-semibold">Prix vente unité :</span> {product.prix_vente_unite} </div>
+                                <div><span className="font-semibold">Poids :</span> {product.product_Poids} </div>
+                                <div><span className="font-semibold">Unités/colis :</span> {product.nombre_unite_par_colis} </div>
+                                <div><span className="font-semibold">Observation :</span> {product.observation || "-"} </div>
+                                <div><span className="font-semibold">Marque :</span> {product.brand?.brand_name || product.brand_id} </div>
+                                <div><span className="font-semibold">Catégorie :</span> {product.category?.category_name || product.category_id} </div>
+                              </div>
+                            </motion.div>
+                          </TableCell>
+                        </TableRow>
                       )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+                    </AnimatePresence>
+                  </>
+                );
+              })
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={columns.length + 1} className="h-24 text-center">
                   Aucun produit trouvé.
                 </TableCell>
               </TableRow>
