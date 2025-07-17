@@ -73,7 +73,11 @@ class PermissionSeeder extends Seeder
                             'products.create',
                             'products.edit',
                             'products.delete',
-
+                            // Permissions Livreurs
+                            'livreurs.view',
+                            'livreurs.create',
+                            'livreurs.edit',
+                            'livreurs.delete',
         ];
 
         foreach ($permissions as $permission) {

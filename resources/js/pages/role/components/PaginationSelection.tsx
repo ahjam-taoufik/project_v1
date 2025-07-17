@@ -7,12 +7,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Table } from "@tanstack/react-table";
 
-interface PaginationSelectionProps {
-  table: any;
+interface PaginationSelectionProps<TData> {
+  table: Table<TData>;
 }
 
-export default function PaginationSelection({ table }: PaginationSelectionProps) {
+export default function PaginationSelection<TData>({ table }: PaginationSelectionProps<TData>) {
   return (
     <Select
       value={`${table.getState().pagination.pageSize}`}

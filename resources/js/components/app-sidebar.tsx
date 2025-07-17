@@ -4,14 +4,14 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type MainNavItem, NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import {  LayoutGrid, LayoutPanelTop, MapPinCheckInside, Notebook, UserRoundPlus, Users, Users2, FolderTree, Package, Package2 } from 'lucide-react';
+import {  LayoutGrid, LayoutPanelTop, MapPinCheckInside, Notebook, UserRoundPlus, Users, Users2, FolderTree, Package, Package2, Truck } from 'lucide-react';
 import AppLogo from './app-logo';
 import { NavMainSimple } from '@/components/nav-main2';
 import { usePermissions } from '@/hooks/use-permissions';
 
 export function AppSidebar() {
     const { hasPermission } = usePermissions();
- 
+
 
     // Navigation simple avec permissions
     const mainNavItemsSimple: NavItem[] = [
@@ -24,6 +24,11 @@ export function AppSidebar() {
             title: 'Users',
             href: '/users',
             icon: Users,
+        }] : []),
+        ...(hasPermission('livreurs.view') ? [{
+            title: 'Livreurs',
+            href: '/livreurs',
+            icon: Truck,
         }] : []),
         ...(hasPermission('commerciaux.view') ? [{
             title: 'Commerciaux',

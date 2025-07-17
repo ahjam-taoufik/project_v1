@@ -140,3 +140,11 @@ export interface Product {
   brand?: Brand;
   category?: Category;
 }
+
+export interface Livreur {
+  id: number;
+  nom: string;
+  telephone: string;
+  created_at: string;
+  updated_at: string;
+}
