@@ -91,6 +91,7 @@ export default function UserDialog({ roles }: UserDialogProps) {
               <Label htmlFor="name">Nom complet</Label>
               <Input
                 id="name"
+                name="name"
                 type="text"
                 placeholder="Entrez le nom complet"
                 className="h-10 sm:h-11"
@@ -106,6 +107,7 @@ export default function UserDialog({ roles }: UserDialogProps) {
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="utilisateur@example.com"
                 className="h-10 sm:h-11"
@@ -153,6 +155,7 @@ export default function UserDialog({ roles }: UserDialogProps) {
               <Label htmlFor="password">Mot de passe</Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
                 placeholder="Minimum 8 caractères avec majuscules, minuscules, chiffres et symboles"
                 className="h-10 sm:h-11"

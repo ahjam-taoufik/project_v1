@@ -1,17 +1,15 @@
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from '@/components/ui/sidebar';
 import { type MainNavItem, NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import {  LayoutGrid, LayoutPanelTop, MapPinCheckInside, Notebook, UserRoundPlus, Users, Users2, FolderTree, Package, Package2, Truck } from 'lucide-react';
+import {  LayoutGrid, LayoutPanelTop, MapPinCheckInside, Notebook, UserRoundPlus, Users, Users2, FolderTree, Package, Package2, Truck, Gift, ArrowDownToLine, Move, Warehouse } from 'lucide-react';
 import AppLogo from './app-logo';
 import { NavMainSimple } from '@/components/nav-main2';
 import { usePermissions } from '@/hooks/use-permissions';
 
 export function AppSidebar() {
     const { hasPermission } = usePermissions();
-
 
     // Navigation simple avec permissions
     const mainNavItemsSimple: NavItem[] = [
@@ -20,26 +18,7 @@ export function AppSidebar() {
             href: '/dashboard',
             icon: LayoutGrid,
         },
-        ...(hasPermission('users.view') ? [{
-            title: 'Users',
-            href: '/users',
-            icon: Users,
-        }] : []),
-        ...(hasPermission('livreurs.view') ? [{
-            title: 'Livreurs',
-            href: '/livreurs',
-            icon: Truck,
-        }] : []),
-        ...(hasPermission('commerciaux.view') ? [{
-            title: 'Commerciaux',
-            href: '/commerciaux',
-            icon: Users,
-        }] : []),
-        ...(hasPermission('reglement.view') ? [{
-            title: 'Reglement',
-            href: '/commercials',
-            icon: Users,
-        }] : []),
+        // Les liens utilisateurs sont désormais regroupés dans le sous-menu "Utilisateurs" ci-dessous
         ...(hasPermission('roles.view') ? [{
             title: 'Roles',
             href: '/roles',
@@ -49,6 +28,23 @@ export function AppSidebar() {
 
     // Navigation avec sous-éléments et permissions
     const mainNavItems: MainNavItem[] = [
+        ...(hasPermission('entrers.view') || hasPermission('products.view') ? [{
+            title: 'Mouvements',
+            icon: Move,
+            subItems: [
+                ...(hasPermission('entrers.view') ? [{
+                    title: 'Entrées',
+                    href: '/entrers',
+                    icon: ArrowDownToLine,
+                }] : []),
+                // Supprimer l'entrée Stock ci-dessous
+                // ...(hasPermission('products.view') ? [{
+                //     title: 'Stock',
+                //     href: '/mouvements/stock',
+                //     icon: Warehouse,
+                // }] : []),
+            ]
+        }] : []),
         ...(hasPermission('clients.view') || hasPermission('secteurs.view') || hasPermission('villes.view') ? [{
             title: 'Manage Clients',
             icon: Users2,
@@ -70,7 +66,7 @@ export function AppSidebar() {
                 }] : []),
             ]
         }] : []),
-        ...(hasPermission('brands.view') || hasPermission('categories.view') || hasPermission('products.view') ? [{
+        ...(hasPermission('brands.view') || hasPermission('categories.view') || hasPermission('products.view') || hasPermission('promotions.view') ? [{
             title: 'Manage Product',
             icon: Package,
             subItems: [
@@ -89,6 +85,37 @@ export function AppSidebar() {
                     href: '/products',
                     icon: Package2,
                 }] : []),
+                ...(hasPermission('promotions.view') ? [{
+                    title: 'Promotions',
+                    href: '/promotions',
+                    icon: Gift,
+                }] : []),
+            ]
+        }] : []),
+        ...(hasPermission('users.view') || hasPermission('livreurs.view') || hasPermission('transporteurs.view') || hasPermission('commerciaux.view') ? [{
+            title: 'Personnels',
+            icon: Users2,
+            subItems: [
+                ...(hasPermission('users.view') ? [{
+                    title: 'Users',
+                    href: '/users',
+                    icon: Users,
+                }] : []),
+                ...(hasPermission('livreurs.view') ? [{
+                    title: 'Livreurs',
+                    href: '/livreurs',
+                    icon: Truck,
+                }] : []),
+                ...(hasPermission('transporteurs.view') ? [{
+                    title: 'Transporteurs',
+                    href: '/transporteurs',
+                    icon: Truck,
+                }] : []),
+                ...(hasPermission('commerciaux.view') ? [{
+                    title: 'Commerciaux',
+                    href: '/commerciaux',
+                    icon: Users,
+                }] : []),
             ]
         }] : []),
     ];
@@ -98,27 +125,17 @@ export function AppSidebar() {
     ];
 
     return (
-        <Sidebar collapsible="icon" variant="inset">
+        <Sidebar>
             <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
-                            <Link href="/dashboard" prefetch>
-                                <AppLogo />
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
+                <AppLogo />
             </SidebarHeader>
-
             <SidebarContent>
                 <NavMainSimple items={mainNavItemsSimple} />
                 <NavMain items={mainNavItems} />
             </SidebarContent>
-
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
                 <NavUser />
+                <NavFooter items={footerNavItems} />
             </SidebarFooter>
         </Sidebar>
     );

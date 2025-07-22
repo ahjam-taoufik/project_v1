@@ -1,4 +1,5 @@
 "use client";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
@@ -24,12 +25,19 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 import PaginationSelection from "@/pages/product/components/PaginationSelection";
-import type { Product } from "@/types";
+import { BrandFilter } from "./BrandFilter";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { IoClose } from "react-icons/io5";
+import type { Product, Brand } from "@/types";
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  brands?: Brand[];
+  openProductId?: number | null;
+  setOpenProductId?: (id: number | null) => void;
 }
 
 export interface PaginationType {
@@ -37,14 +45,27 @@ export interface PaginationType {
   pageSize: number;
 }
 
-export function ProductTable<TData extends Product, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function ProductTable<TData extends Product, TValue>({
+  columns,
+  data,
+  brands = [],
+  openProductId,
+  setOpenProductId
+}: DataTableProps<TData, TValue>) {
   const [pagination, setPagination] = useState<PaginationType>({
     pageIndex: 0,
     pageSize: 8,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [openProductId, setOpenProductId] = useState<number | null>(null);
+  const [selectedBrands, setSelectedBrands] = useState<number[]>([]);
+
+  // État local pour l'accordéon si les props ne sont pas fournies
+  const [localOpenProductId, setLocalOpenProductId] = useState<number | null>(null);
+
+  // Utiliser les props ou l'état local
+  const currentOpenProductId = openProductId !== undefined ? openProductId : localOpenProductId;
+  const setCurrentOpenProductId = setOpenProductId || setLocalOpenProductId;
 
   useEffect(() => {
     setSorting([
@@ -55,8 +76,16 @@ export function ProductTable<TData extends Product, TValue>({ columns, data }: D
     ]);
   }, []);
 
+  // Filter data based on selected brands
+  const filteredData = React.useMemo(() => {
+    if (selectedBrands.length === 0) {
+      return data;
+    }
+    return data.filter((product) => selectedBrands.includes(product.brand_id));
+  }, [data, selectedBrands]);
+
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     state: {
       pagination,
@@ -80,6 +109,12 @@ export function ProductTable<TData extends Product, TValue>({ columns, data }: D
   return (
     <div className="poppins">
       <div className="flex flex-col gap-3 mb-8 mt-6 ">
+        <FilterArea
+          selectedBrands={selectedBrands}
+          setSelectedBrands={setSelectedBrands}
+          brands={brands}
+        />
+
         <div className="flex items-center justify-between ">
           <div className="flex gap-2 max-w-lg">
             <Input
@@ -99,6 +134,13 @@ export function ProductTable<TData extends Product, TValue>({ columns, data }: D
               className="max-w-sm h-10"
             />
           </div>
+          <div className="flex gap-2">
+            <BrandFilter
+              selectedBrands={selectedBrands}
+              setSelectedBrands={setSelectedBrands}
+              brands={brands}
+            />
+          </div>
         </div>
       </div>
       <div className="rounded-md border">
@@ -116,19 +158,27 @@ export function ProductTable<TData extends Product, TValue>({ columns, data }: D
                         )}
                   </TableHead>
                 ))}
-                <TableHead>Actions</TableHead>
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => {
+              table.getRowModel().rows.map((row, index) => {
                 const product = row.original as Product;
+                const isEven = index % 2 === 0;
                 return (
-                  <>
+                  <React.Fragment key={row.id}>
                     <TableRow
-                      key={row.id}
                       data-state={row.getIsSelected() && "selected"}
+                      className={`${isEven ? "bg-white" : "bg-gray-50 hover:bg-gray-100"} cursor-pointer`}
+                                            onClick={(e) => {
+                        // Empêcher la propagation des événements de clic
+                        e.stopPropagation();
+
+                        if (setCurrentOpenProductId) {
+                          setCurrentOpenProductId(currentOpenProductId === product.id ? null : product.id);
+                        }
+                      }}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
@@ -138,17 +188,9 @@ export function ProductTable<TData extends Product, TValue>({ columns, data }: D
                           )}
                         </TableCell>
                       ))}
-                      <TableCell>
-                        <button
-                          className="text-blue-600 underline text-sm"
-                          onClick={() => setOpenProductId(openProductId === product.id ? null : product.id)}
-                        >
-                          {openProductId === product.id ? "Voir moins" : "Voir plus"}
-                        </button>
-                      </TableCell>
                     </TableRow>
                     <AnimatePresence initial={false}>
-                      {openProductId === product.id && (
+                      {currentOpenProductId === product.id && (
                         <TableRow key={`details-${product.id}`}>
                           <TableCell colSpan={columns.length + 1} className="bg-gray-50 p-0">
                             <motion.div
@@ -176,7 +218,7 @@ export function ProductTable<TData extends Product, TValue>({ columns, data }: D
                         </TableRow>
                       )}
                     </AnimatePresence>
-                  </>
+                  </React.Fragment>
                 );
               })
             ) : (
@@ -233,6 +275,58 @@ export function ProductTable<TData extends Product, TValue>({ columns, data }: D
           </Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function FilterArea({
+  selectedBrands,
+  setSelectedBrands,
+  brands,
+}: {
+  selectedBrands: number[];
+  setSelectedBrands: React.Dispatch<React.SetStateAction<number[]>>;
+  brands: Brand[];
+}) {
+  return (
+    <div className="flex gap-3 poppins">
+      {selectedBrands.length > 0 && (
+        <div className="border-dashed border rounded-sm p-1 flex gap-2 items-center px-2 text-sm">
+          <span className="text-gray-600">Marque</span>
+          <Separator orientation="vertical" />
+          <div className="flex gap-2 items-center">
+            {selectedBrands.length < 3 ? (
+              <>
+                {selectedBrands.map((brandId, index) => {
+                  const brand = brands.find(b => b.id === brandId);
+                  return (
+                    <Badge key={index} variant={"secondary"}>
+                      {brand?.brand_name || brandId}
+                    </Badge>
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                <Badge variant={"secondary"}>{selectedBrands.length} Selected</Badge>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {selectedBrands.length > 0 && (
+        <Button
+          onClick={() => {
+            setSelectedBrands([]);
+          }}
+          variant={"ghost"}
+          className="p-1 px-2"
+        >
+          <span>Reset</span>
+          <IoClose />
+        </Button>
+      )}
     </div>
   );
 }

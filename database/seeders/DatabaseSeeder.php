@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             BrandSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,
+            TransporteurSeeder::class,
         ]);
 
         // 2. Maintenant créer le rôle Super Admin avec TOUTES les permissions

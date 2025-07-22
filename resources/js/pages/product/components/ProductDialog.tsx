@@ -124,7 +124,12 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent className="w-[95vw] max-w-[900px] max-h-[95vh] overflow-y-auto p-4 sm:p-6 sm:max-w-[900px] md:p-7 md:px-8 poppins" onInteractOutside={e => e.preventDefault()}>
+      <DialogContent
+        className="w-[95vw] max-w-[900px] max-h-[95vh] overflow-y-auto p-4 sm:p-6 sm:max-w-[900px] md:p-7 md:px-8 poppins"
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onInteractOutside={(e) => e.preventDefault()}
+        onClick={(e) => e.stopPropagation()}
+      >
         <DialogHeader className="space-y-2">
           <DialogTitle className="text-lg sm:text-xl md:text-[22px] text-center sm:text-left">
             Ajouter un Produit
@@ -141,6 +146,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
               <Label htmlFor="product_Ref">Référence</Label>
               <Input
                 id="product_Ref"
+                name="product_Ref"
                 type="text"
                 placeholder="PR-1234-ABC"
                 className="h-10 sm:h-11"
@@ -157,6 +163,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
               <Label htmlFor="product_libelle">Libellé</Label>
               <Input
                 id="product_libelle"
+                name="product_libelle"
                 type="text"
                 placeholder="Nom du produit"
                 className="h-10 sm:h-11"
@@ -173,6 +180,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
               <Label htmlFor="brand_id">Marque</Label>
               <select
                 id="brand_id"
+                name="brand_id"
                 value={data.brand_id}
                 onChange={(e) => {
                   setData('brand_id', e.target.value);
@@ -198,6 +206,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
               <Label htmlFor="category_id">Catégorie</Label>
               <select
                 id="category_id"
+                name="category_id"
                 value={data.category_id}
                 onChange={(e) => setData('category_id', e.target.value)}
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -221,6 +230,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
               <Label htmlFor="prix_achat_colis">Prix d'achat colis (Dhs)</Label>
               <Input
                 id="prix_achat_colis"
+                name="prix_achat_colis"
                 type="number"
                 step="0.01"
                 min="0"
@@ -239,6 +249,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
               <Label htmlFor="prix_achat_unite">Prix d'achat unité (Dhs)</Label>
               <Input
                 id="prix_achat_unite"
+                name="prix_achat_unite"
                 type="number"
                 step="0.01"
                 min="0"
@@ -257,6 +268,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
               <Label htmlFor="prix_vente_colis">Prix de vente colis (Dhs)</Label>
               <Input
                 id="prix_vente_colis"
+                name="prix_vente_colis"
                 type="number"
                 step="0.01"
                 min="0"
@@ -275,6 +287,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
               <Label htmlFor="prix_vente_unite">Prix de vente unité (Dhs)</Label>
               <Input
                 id="prix_vente_unite"
+                name="prix_vente_unite"
                 type="number"
                 step="0.01"
                 min="0"
@@ -293,6 +306,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
               <Label htmlFor="product_Poids">Poids (kg)</Label>
               <Input
                 id="product_Poids"
+                name="product_Poids"
                 type="number"
                 step="0.001"
                 min="0"
@@ -311,6 +325,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
               <Label htmlFor="nombre_unite_par_colis">Nombre d'unités par colis *</Label>
               <Input
                 id="nombre_unite_par_colis"
+                name="nombre_unite_par_colis"
                 type="number"
                 min="1"
                 max="9999"
@@ -329,6 +344,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
             <div className="flex items-center space-x-2 pt-6">
               <Checkbox
                 id="product_isActive"
+                name="product_isActive"
                 checked={data.product_isActive}
                 onCheckedChange={(checked) => setData('product_isActive', checked as boolean)}
               />
@@ -341,6 +357,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
             <Label htmlFor="observation">Observation (optionnel)</Label>
             <Textarea
               id="observation"
+              name="observation"
               placeholder="Notes ou observations sur le produit..."
               className="resize-none"
               rows={3}
@@ -356,7 +373,7 @@ export default function ProductDialog({ duplicateData, isOpen, onOpenChange }: P
             <Button
               type="button"
               variant="outline"
-              onClick={() => setOpen(false)}
+              onClick={() => setDialogOpen(false)}
               disabled={processing}
               className="w-full sm:w-auto"
             >

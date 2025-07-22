@@ -106,7 +106,12 @@ export default function ProductEditDialog({
 
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
-            <DialogContent className="w-[95vw] max-w-[900px] max-h-[95vh] overflow-y-auto p-4 sm:p-6 sm:max-w-[900px] md:p-7 md:px-8 poppins">
+            <DialogContent
+                className="w-[95vw] max-w-[900px] max-h-[95vh] overflow-y-auto p-4 sm:p-6 sm:max-w-[900px] md:p-7 md:px-8 poppins"
+                onPointerDownOutside={(e) => e.preventDefault()}
+                onInteractOutside={(e) => e.preventDefault()}
+                onClick={(e) => e.stopPropagation()}
+            >
                 <DialogHeader>
                     <DialogTitle>Modifier le produit</DialogTitle>
                     <DialogDescription>
@@ -121,6 +126,7 @@ export default function ProductEditDialog({
                             <Label htmlFor="product_Ref">Référence</Label>
                             <Input
                                 id="product_Ref"
+                                name="product_Ref"
                                 value={data.product_Ref}
                                 onChange={(e) => setData('product_Ref', e.target.value)}
                                 placeholder="Référence du produit"
@@ -135,6 +141,7 @@ export default function ProductEditDialog({
                             <Label htmlFor="product_libelle">Libellé</Label>
                             <Input
                                 id="product_libelle"
+                                name="product_libelle"
                                 value={data.product_libelle}
                                 onChange={(e) => setData('product_libelle', e.target.value)}
                                 placeholder="Nom du produit"
@@ -149,6 +156,7 @@ export default function ProductEditDialog({
                             <Label htmlFor="brand_id">Marque</Label>
                             <select
                                 id="brand_id"
+                                name="brand_id"
                                 value={data.brand_id}
                                 onChange={(e) => {
                                     setData('brand_id', e.target.value);
@@ -174,6 +182,7 @@ export default function ProductEditDialog({
                             <Label htmlFor="category_id">Catégorie</Label>
                             <select
                                 id="category_id"
+                                name="category_id"
                                 value={data.category_id}
                                 onChange={(e) => setData('category_id', e.target.value)}
                                 className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -197,6 +206,7 @@ export default function ProductEditDialog({
                             <Label htmlFor="prix_achat_colis">Prix d'achat colis (Dhs)</Label>
                             <Input
                                 id="prix_achat_colis"
+                                name="prix_achat_colis"
                                 type="number"
                                 step="0.01"
                                 min="0"
@@ -214,6 +224,7 @@ export default function ProductEditDialog({
                             <Label htmlFor="prix_achat_unite">Prix d'achat unité (Dhs)</Label>
                             <Input
                                 id="prix_achat_unite"
+                                name="prix_achat_unite"
                                 type="number"
                                 step="0.01"
                                 min="0"
@@ -231,6 +242,7 @@ export default function ProductEditDialog({
                             <Label htmlFor="prix_vente_colis">Prix de vente colis (Dhs)</Label>
                             <Input
                                 id="prix_vente_colis"
+                                name="prix_vente_colis"
                                 type="number"
                                 step="0.01"
                                 min="0"
@@ -248,6 +260,7 @@ export default function ProductEditDialog({
                             <Label htmlFor="prix_vente_unite">Prix de vente unité (Dhs)</Label>
                             <Input
                                 id="prix_vente_unite"
+                                name="prix_vente_unite"
                                 type="number"
                                 step="0.01"
                                 min="0"
@@ -265,6 +278,7 @@ export default function ProductEditDialog({
                             <Label htmlFor="product_Poids">Poids (kg)</Label>
                             <Input
                                 id="product_Poids"
+                                name="product_Poids"
                                 type="number"
                                 step="0.001"
                                 min="0"
@@ -282,6 +296,7 @@ export default function ProductEditDialog({
                             <Label htmlFor="nombre_unite_par_colis">Nombre d'unités par colis *</Label>
                             <Input
                                 id="nombre_unite_par_colis"
+                                name="nombre_unite_par_colis"
                                 type="number"
                                 min="1"
                                 max="9999"
@@ -299,6 +314,7 @@ export default function ProductEditDialog({
                         <div className="flex items-center space-x-2 pt-6">
                             <Checkbox
                                 id="product_isActive"
+                                name="product_isActive"
                                 checked={data.product_isActive}
                                 onCheckedChange={(checked) => setData('product_isActive', checked as boolean)}
                             />
@@ -311,6 +327,7 @@ export default function ProductEditDialog({
                         <Label htmlFor="observation">Observation (optionnel)</Label>
                         <Textarea
                             id="observation"
+                            name="observation"
                             value={data.observation}
                             onChange={(e) => setData('observation', e.target.value)}
                             placeholder="Notes ou observations sur le produit..."

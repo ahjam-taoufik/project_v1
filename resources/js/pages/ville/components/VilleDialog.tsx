@@ -78,6 +78,7 @@ export default function ProductDialog() {
               <Label htmlFor="nameVille">Nom de la Ville</Label>
               <Input
                 id="nameVille"
+                name="nameVille"
                 type="text"
                 placeholder="Entrez le nom de la ville (min. 3 caractères)"
                 className="h-10 sm:h-11"

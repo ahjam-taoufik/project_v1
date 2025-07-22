@@ -94,6 +94,7 @@ export default function UserEditDialog({
               </Label>
               <Input
                 id="name"
+                name="name"
                 value={data.name}
                 onChange={(e) => setData('name', e.target.value)}
                 className="col-span-3"
@@ -110,6 +111,7 @@ export default function UserEditDialog({
               </Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
                 value={data.email}
                 onChange={(e) => setData('email', e.target.value)}
@@ -163,6 +165,7 @@ export default function UserEditDialog({
               </Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
                 value={data.password}
                 onChange={(e) => setData('password', e.target.value)}

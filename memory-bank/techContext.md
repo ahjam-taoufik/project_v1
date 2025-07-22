@@ -18,6 +18,17 @@
 - **UI Components**: shadcn/ui component library
 - **Icons**: Lucide React icon library
 
+### ⚠️ CRITICAL: HTTP Request Patterns
+**RULE**: Always use Inertia.js (`router.post()`, `router.put()`, `router.delete()`) instead of `fetch()` for form submissions and CRUD operations.
+
+**Exceptions (cas particuliers)**:
+- API calls for dynamic data loading (`/api/product-details/{id}`)
+- Real-time validation checks (`/api/check-bl-exists/{numeroBl}`)
+- File uploads with progress tracking
+- WebSocket connections
+
+**Why**: Prevents CSRF issues (error 419), ensures consistent error handling, maintains SPA experience.
+
 ### Development Tools
 - **Package Manager**: npm (Node.js ecosystem)
 - **Type Checking**: TypeScript with strict configuration

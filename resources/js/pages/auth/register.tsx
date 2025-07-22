@@ -40,6 +40,7 @@ export default function Register() {
                         <Label htmlFor="name">Name</Label>
                         <Input
                             id="name"
+                            name="name"
                             type="text"
                             required
                             autoFocus
@@ -57,6 +58,7 @@ export default function Register() {
                         <Label htmlFor="email">Email address</Label>
                         <Input
                             id="email"
+                            name="email"
                             type="email"
                             required
                             tabIndex={2}
@@ -73,6 +75,7 @@ export default function Register() {
                         <Label htmlFor="password">Password</Label>
                         <Input
                             id="password"
+                            name="password"
                             type="password"
                             required
                             tabIndex={3}

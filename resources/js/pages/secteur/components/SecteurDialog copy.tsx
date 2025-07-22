@@ -71,6 +71,7 @@ export default function SecteurDialog() {
               <Label htmlFor="nameVille">Nom de Secteur</Label>
               <Input
                 id="nameVille"
+                name="nameSecteur"
                 type="text"
                 placeholder="Entrez le nom de la ville (min. 3 caractères)"
                 className="h-10 sm:h-11"

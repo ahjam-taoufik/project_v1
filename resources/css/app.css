@@ -2,6 +2,31 @@
 
 @plugin 'tailwindcss-animate';
 
+/* Optimisation des polices pour éviter les warnings de chargement */
+@font-face {
+    font-family: 'Instrument Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('https://fonts.bunny.net/instrument-sans/files/instrument-sans-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Instrument Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('https://fonts.bunny.net/instrument-sans/files/instrument-sans-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Instrument Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('https://fonts.bunny.net/instrument-sans/files/instrument-sans-latin-600-normal.woff2') format('woff2');
+}
+
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
@@ -168,18 +193,31 @@
     isolation: isolate;
 }
 
-/* Animation Collapsible Radix UI */
-[data-slot="collapsible-content"] {
+/* Animation Collapsible Radix UI - Exclure le sidebar */
+[data-slot="collapsible-content"]:not([data-sidebar="menu-sub"]) {
   overflow: hidden;
 }
-[data-slot="collapsible-content"][data-state="open"] {
-  animation: slideDown 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+[data-slot="collapsible-content"]:not([data-sidebar="menu-sub"])[data-state="open"] {
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   height: var(--radix-collapsible-content-height);
 }
-[data-slot="collapsible-content"][data-state="closed"] {
-  animation: slideUp 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+[data-slot="collapsible-content"]:not([data-sidebar="menu-sub"])[data-state="closed"] {
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   height: 0;
 }
+
+/* Animation spécifique pour le sidebar - plus rapide et plus subtile */
+[data-slot="collapsible-content"][data-sidebar="menu-sub"] {
+  overflow: hidden;
+  transition: height 0.2s ease-in-out;
+}
+[data-slot="collapsible-content"][data-sidebar="menu-sub"][data-state="open"] {
+  height: var(--radix-collapsible-content-height);
+}
+[data-slot="collapsible-content"][data-sidebar="menu-sub"][data-state="closed"] {
+  height: 0;
+}
+
 @keyframes slideDown {
   from { height: 0; }
   to { height: var(--radix-collapsible-content-height); }
@@ -188,3 +226,4 @@
   from { height: var(--radix-collapsible-content-height); }
   to { height: 0; }
 }
+

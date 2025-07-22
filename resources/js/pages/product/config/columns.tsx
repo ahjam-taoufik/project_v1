@@ -127,6 +127,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     id: "actions",
     enableHiding: false,
+    header: "Actions",
     cell: ({ row }) => {
       const product = row.original;
       return <ProductDropDown product={product} />;

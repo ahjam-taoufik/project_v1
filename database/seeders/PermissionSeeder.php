@@ -78,6 +78,21 @@ class PermissionSeeder extends Seeder
                             'livreurs.create',
                             'livreurs.edit',
                             'livreurs.delete',
+                            // Permissions Transporteurs
+                            'transporteurs.view',
+                            'transporteurs.create',
+                            'transporteurs.edit',
+                            'transporteurs.delete',
+                            // Permissions Promotions
+                            'promotions.view',
+                            'promotions.create',
+                            'promotions.edit',
+                            'promotions.delete',
+                            // Permissions Entrers
+                            'entrers.view',
+                            'entrers.create',
+                            'entrers.edit',
+                            'entrers.delete',
         ];
 
         foreach ($permissions as $permission) {

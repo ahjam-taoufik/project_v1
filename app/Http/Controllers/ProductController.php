@@ -111,4 +111,16 @@ class ProductController extends Controller
             return redirect()->back()->withErrors(['message' => 'Erreur lors de la suppression: ' . $e->getMessage()])->withInput();
         }
     }
+
+    /**
+     * Get products for API
+     */
+    public function getProducts()
+    {
+        $products = Product::orderBy('product_libelle')->get(['id', 'product_libelle', 'product_Ref']);
+
+        return response()->json([
+            'products' => $products
+        ]);
+    }
 }

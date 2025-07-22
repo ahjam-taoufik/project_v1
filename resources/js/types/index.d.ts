@@ -148,3 +148,14 @@ export interface Livreur {
   created_at: string;
   updated_at: string;
 }
+
+export interface Transporteur {
+  id: number;
+  conducteur_name: string;
+  vehicule_matricule: string;
+  conducteur_cin: string;
+  conducteur_telephone: string;
+  vehicule_type: string;
+  created_at: string;
+  updated_at: string;
+}

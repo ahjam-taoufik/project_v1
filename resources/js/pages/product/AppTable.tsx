@@ -4,12 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProductDialog from "./components/ProductDialog";
 import { columns } from "./config/columns";
 import { ProductTable } from "./components/ProductTable";
-import type { Product } from "@/types";
-import { useEffect } from "react";
+import type { Product, Brand } from "@/types";
+import { useEffect, useState } from "react";
 
 export default function AppTable() {
-    const { props: { products } } = usePage();
+    const { props: { products, brands } } = usePage();
     const productsArray = products as Product[];
+    const brandsArray = brands as Brand[];
+    const [openProductId, setOpenProductId] = useState<number | null>(null);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -41,7 +43,13 @@ export default function AppTable() {
             </CardHeader>
             <CardContent className="p-1 sm:p-2 md:p-4 w-full overflow-x-auto">
                 <div className="min-w-[300px]">
-                    <ProductTable data={products as Product[]} columns={columns} />
+                    <ProductTable
+                        data={products as Product[]}
+                        columns={columns}
+                        brands={brandsArray}
+                        openProductId={openProductId}
+                        setOpenProductId={setOpenProductId}
+                    />
                 </div>
             </CardContent>
         </Card>

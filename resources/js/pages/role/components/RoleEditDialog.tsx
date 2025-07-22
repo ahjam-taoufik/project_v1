@@ -144,6 +144,7 @@ export default function RoleEditDialog({ isOpen, onOpenChange, role, permissions
               <Label htmlFor="edit-name">Nom du Rôle</Label>
               <Input
                 id="edit-name"
+                name="name"
                 type="text"
                 placeholder="Entrez le nom du rôle (min. 3 caractères)"
                 className="h-10 sm:h-11"

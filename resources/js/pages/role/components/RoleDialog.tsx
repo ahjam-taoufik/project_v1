@@ -129,6 +129,7 @@ export default function RoleDialog({ permissions }: RoleDialogProps) {
                 <Label htmlFor="name">Nom du Rôle</Label>
                 <Input
                   id="nameRole"
+                  name="name"
                   type="text"
                   placeholder="Entrez le nom du rôle (min. 3 caractères)"
                   className="h-10 sm:h-11"
